@@ -33,7 +33,7 @@ const PAGES_FILE = path.join(WEBSITE_ROOT, 'content', 'pages.json');
 const BACKUP_DIR = path.join(ROOT, 'backups');
 const UPLOAD_DIR = path.join(WEBSITE_ROOT, 'assets', 'images');
 const WEBSITE_ASSETS_DIR = path.join(WEBSITE_ROOT, 'assets');
-const MAX_BODY = 25 * 1024 * 1024; // 25 MB
+const MAX_BODY = 100 * 1024 * 1024; // 100 MB
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -69,8 +69,9 @@ function readBody(req) {
     req.on('data', (c) => {
       size += c.length;
       if (size > MAX_BODY) {
-        reject(new Error('Body too large'));
-        req.destroy();
+        // Prevent further data processing but don't destroy immediately, 
+        // to allow a proper 500 error response to be sent back.
+        reject(new Error('Image is too large (exceeds 100MB limit). Please compress it and try again.'));
         return;
       }
       chunks.push(c);
