@@ -3,6 +3,31 @@
     "home": {
       "sections": [
         {
+          "id": "default:hero",
+          "type": "default_section",
+          "key": "hero"
+        },
+        {
+          "id": "default:practice",
+          "type": "default_section",
+          "key": "practice"
+        },
+        {
+          "id": "default:projects",
+          "type": "default_section",
+          "key": "projects"
+        },
+        {
+          "id": "default:experience",
+          "type": "default_section",
+          "key": "experience"
+        },
+        {
+          "id": "default:footer",
+          "type": "default_section",
+          "key": "footer"
+        },
+        {
           "id": "s_xtffewu",
           "bg": "",
           "paddingY": 64,
@@ -34,10 +59,40 @@
             }
           ]
         }
-      ]
+      ],
+      "defaultOverrides": {},
+      "migrated": true
     },
     "product-wireframes": {
-      "sections": []
+      "sections": [
+        {
+          "id": "default:media",
+          "type": "default_section",
+          "key": "media"
+        },
+        {
+          "id": "default:pdf",
+          "type": "default_section",
+          "key": "pdf"
+        },
+        {
+          "id": "default:hero",
+          "type": "default_section",
+          "key": "hero"
+        },
+        {
+          "id": "default:overview",
+          "type": "default_section",
+          "key": "overview"
+        },
+        {
+          "id": "default:footer",
+          "type": "default_section",
+          "key": "footer"
+        }
+      ],
+      "defaultOverrides": {},
+      "migrated": true
     },
     "product-decks": {
       "sections": []
