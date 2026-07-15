@@ -1,0 +1,10 @@
+{
+  "overrides": {
+    "site.nav.links.0.label": {
+      "color": "#000000"
+    },
+    "home.hero.ctaLabel": {
+      "color": "#ffffff"
+    }
+  }
+}

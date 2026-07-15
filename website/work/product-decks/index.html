@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="../../favicon.ico">
+<title>Product Decks — Kamalish</title>
+<meta name="description" content="Complex product ideas shaped into focused stories people can follow.">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<script src="../../assets/js/theme-core.js"></script>
+<script src="../../assets/js/theme-apply.js"></script>
+<script src="../../assets/js/render.js" defer></script>
+<script src="../../assets/js/sections.js" defer></script>
+</head>
+<body data-title-path="deckGallery.title">
+<div class="deck-page min-h-screen bg-ploy-background-primary text-ploy-text-primary">
+
+<header class="nav border-b border-ploy-border-primary bg-ploy-background-primary text-ploy-text-primary">
+  <nav class="nav__container mx-auto flex min-h-18 max-w-7xl items-center justify-between gap-4 px-5 md:px-8" aria-label="Primary navigation">
+    <a class="nav__logo font-heading text-2xl font-semibold tracking-tight md:text-3xl" href="../../" aria-label="Kamalish portfolio home" data-cms="site.nav.logo">Kamalish</a>
+    <div class="nav__actions flex items-center justify-end gap-5">
+      <a class="nav__link text-sm text-ploy-text-primary transition-opacity hover:opacity-55" href="../../#work" data-cms="site.nav.links.0.label" data-cms-href="site.nav.links.0.href">Projects</a>
+      <a class="nav__link hidden text-sm text-ploy-text-primary transition-opacity hover:opacity-55 sm:inline" href="../../#about" data-cms="site.nav.links.1.label" data-cms-href="site.nav.links.1.href">Profile</a>
+    </div>
+  </nav>
+</header>
+
+<main class="deck-page__main bg-ploy-background-primary px-5 py-12 md:px-8 md:py-16">
+  <section class="deck-gallery mx-auto max-w-7xl">
+    <div class="deck-gallery__header mb-8">
+      <a class="deck-gallery__back inline-flex items-center gap-2 text-sm text-ploy-text-secondary transition-opacity hover:opacity-60" href="../../#work">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left deck-gallery__back-icon size-4" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg><span data-cms="deckGallery.backLabel">All projects</span></a>
+      <h1 class="deck-gallery__title mt-8 font-body text-3xl font-semibold tracking-tight md:text-4xl" data-cms="deckGallery.title">Product Decks</h1>
+    </div>
+    <div class="deck-gallery__grid grid gap-5 md:grid-cols-2 lg:grid-cols-3" data-cms-list="deckGallery.items">
+      <template>
+        <article class="deck-card group overflow-hidden rounded-card border border-ploy-border-primary bg-ploy-background-primary">
+          <a class="deck-card__pdf block" target="_blank" rel="noopener" data-f-href="pdfUrl">
+            <div class="deck-card__media aspect-video overflow-hidden">
+              <img class="deck-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" data-f-src="image" data-f-alt="imageAlt" loading="lazy">
+            </div>
+            <div class="deck-card__label flex min-h-12 items-center justify-between gap-4 bg-ploy-background-primary px-5 py-3 text-ploy-text-primary">
+              <h2 class="deck-card__title truncate text-sm font-medium" data-f="title"></h2>
+              <svg data-f-if="pdfUrl" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right size-4 shrink-0" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+            </div>
+          </a>
+        </article>
+      </template>
+      <article class="deck-card group overflow-hidden rounded-card border border-ploy-border-primary bg-ploy-background-primary">
+        <div class="deck-card__media aspect-video overflow-hidden"><img class="deck-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" src="../../assets/images/deck-flipkart.webp" alt="Graphic collage representing creator-led Gen Z commerce and mobile discovery" loading="lazy"></div>
+        <div class="deck-card__label flex min-h-12 items-center justify-between gap-4 bg-ploy-background-primary px-5 py-3 text-ploy-text-primary"><h2 class="deck-card__title truncate text-sm font-medium">Flipkart Gen Z Commerce Strategy</h2></div>
+      </article>
+      <article class="deck-card group overflow-hidden rounded-card border border-ploy-border-primary bg-ploy-background-primary">
+        <div class="deck-card__media aspect-video overflow-hidden"><img class="deck-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" src="../../assets/images/deck-ev-market.webp" alt="Electric vehicle and market growth network over an abstract map of India" loading="lazy"></div>
+        <div class="deck-card__label flex min-h-12 items-center justify-between gap-4 bg-ploy-background-primary px-5 py-3 text-ploy-text-primary"><h2 class="deck-card__title truncate text-sm font-medium">Premium EV Market Entry Strategy</h2></div>
+      </article>
+      <article class="deck-card group overflow-hidden rounded-card border border-ploy-border-primary bg-ploy-background-primary">
+        <div class="deck-card__media aspect-video overflow-hidden"><img class="deck-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" src="../../assets/images/deck-riva.webp" alt="Hyperlocal city map with travel recommendations and route markers" loading="lazy"></div>
+        <div class="deck-card__label flex min-h-12 items-center justify-between gap-4 bg-ploy-background-primary px-5 py-3 text-ploy-text-primary"><h2 class="deck-card__title truncate text-sm font-medium">RIVA — AI Hyperlocal Travel GTM</h2></div>
+      </article>
+      <article class="deck-card group overflow-hidden rounded-card border border-ploy-border-primary bg-ploy-background-primary">
+        <div class="deck-card__media aspect-video overflow-hidden"><img class="deck-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" src="../../assets/images/deck-audit-logs.webp" alt="Dark product interface illustrating filtered audit log events" loading="lazy"></div>
+        <div class="deck-card__label flex min-h-12 items-center justify-between gap-4 bg-ploy-background-primary px-5 py-3 text-ploy-text-primary"><h2 class="deck-card__title truncate text-sm font-medium">Desk365 Audit Logs PRD</h2></div>
+      </article>
+      <article class="deck-card group overflow-hidden rounded-card border border-ploy-border-primary bg-ploy-background-primary">
+        <div class="deck-card__media aspect-video overflow-hidden"><img class="deck-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" src="../../assets/images/deck-support-portals.webp" alt="Multiple support portal interfaces connected to one central workspace" loading="lazy"></div>
+        <div class="deck-card__label flex min-h-12 items-center justify-between gap-4 bg-ploy-background-primary px-5 py-3 text-ploy-text-primary"><h2 class="deck-card__title truncate text-sm font-medium">Desk365 Multiple Support Portals PRD</h2></div>
+      </article>
+      <article class="deck-card group overflow-hidden rounded-card border border-ploy-border-primary bg-ploy-background-primary">
+        <div class="deck-card__media aspect-video overflow-hidden"><img class="deck-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" src="../../assets/images/deck-tata.webp" alt="Business strategy cards, opportunity maps, and decision paths" loading="lazy"></div>
+        <div class="deck-card__label flex min-h-12 items-center justify-between gap-4 bg-ploy-background-primary px-5 py-3 text-ploy-text-primary"><h2 class="deck-card__title truncate text-sm font-medium">Tata Imagination Challenge</h2></div>
+      </article>
+    </div>
+  </section>
+<div class="custom-sections" data-page="product-decks"></div>
+</main>
+
+<footer class="footer bg-ploy-background-inverse text-ploy-text-inverse" id="about">
+  <div class="footer__container mx-auto grid max-w-7xl gap-14 px-5 py-16 md:grid-cols-[1.4fr_1fr] md:px-8 md:py-24">
+    <div class="footer__statement max-w-2xl">
+      <h2 class="footer__title font-heading text-balance text-4xl leading-tight tracking-tight md:text-6xl" data-cms="site.footer.title">Clear thinking deserves a clear form.</h2>
+      <p class="footer__copy mt-6 max-w-lg text-base text-ploy-text-inverse-secondary" data-cms="site.footer.copy">This portfolio is designed to grow with real decks, wireframes, visual systems, and detailed project stories.</p>
+    </div>
+    <div class="footer__meta flex flex-col justify-between gap-10 border-t border-ploy-border-inverse pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+      <div class="footer__links flex flex-col gap-3" data-cms-list="site.footer.links">
+        <template><a class="footer__link text-sm transition-opacity hover:opacity-60" data-f="label" data-f-href="href"></a></template>
+        <a class="footer__link text-sm transition-opacity hover:opacity-60" href="../../#work">Selected work</a>
+        <a class="footer__link text-sm transition-opacity hover:opacity-60" href="../../#experience">Experience</a>
+        <a class="footer__link text-sm transition-opacity hover:opacity-60" href="../../">Home</a>
+      </div>
+      <div class="footer__bottom flex items-center justify-between gap-4">
+        <p class="footer__copyright text-sm text-ploy-text-inverse-secondary">© <span data-cms="site.footer.copyrightYear">2026</span> <span data-cms="site.footer.copyrightName">Kamalish</span></p>
+        <span class="footer__linkedin footer__linkedin--pending inline-flex size-10 items-center justify-center rounded-button border border-ploy-border-inverse text-ploy-text-inverse-secondary" aria-label="LinkedIn link coming soon" data-cms-linkedin="site.footer.linkedinUrl">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin footer__linkedin-icon size-4" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

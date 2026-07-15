@@ -1,0 +1,41 @@
+name: Deploy website to GitHub Pages
+
+# Publishes the static site in ./website to GitHub Pages on every push to the
+# default branch. The CMS (./cms) is NOT deployed — it is a local-only editing
+# tool that writes to disk and must never be exposed publicly.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload website/ as the Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./website
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

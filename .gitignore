@@ -1,0 +1,16 @@
+# CMS backups are local editing history — not part of the site
+cms/backups/
+
+# Dependencies (this project has none, but just in case)
+node_modules/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.vscode/
+.idea/
+
+# Claude Code local settings (keep launch.json, ignore personal overrides)
+.claude/settings.local.json

@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "website",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["website/server.js"],
+      "port": 4173
+    },
+    {
+      "name": "cms",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["cms/server.js"],
+      "port": 4174
+    }
+  ]
+}

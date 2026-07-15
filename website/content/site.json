@@ -1,0 +1,211 @@
+{
+  "site": {
+    "name": "Kamalish",
+    "title": "Kamalish - Product Design Portfolio",
+    "description": "Product decks, wireframes, and graphic design presented through clear, artifact-led case studies.",
+    "nav": {
+      "logo": "Kamalish",
+      "links": [
+        {
+          "label": "Projects",
+          "href": "/#work"
+        },
+        {
+          "label": "Profile",
+          "href": "/#about"
+        }
+      ]
+    },
+    "footer": {
+      "title": "Clear thinking deserves a clear form.",
+      "copy": "This portfolio is designed to grow with real decks, wireframes, visual systems, and detailed project stories.",
+      "links": [
+        {
+          "label": "Selected work",
+          "href": "/#work"
+        },
+        {
+          "label": "Experience",
+          "href": "/#experience"
+        },
+        {
+          "label": "Home",
+          "href": "/"
+        }
+      ],
+      "copyrightYear": "2026",
+      "copyrightName": "Kamalish",
+      "linkedinUrl": ""
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Hi, I’m Kamalish",
+      "subtitle": "An aspiring product manager at IIT Madras, working at the intersection of product strategy, user experience, and visual storytelling.",
+      "ctaLabel": "See projects",
+      "ctaHref": "#work",
+      "image": "/assets/images/hero-desk.webp",
+      "imageAlt": "Editorial desk with wireframes, product artifacts, and a crimson notebook"
+    },
+    "practice": [
+      {
+        "mark": "Ps",
+        "title": "Product strategy",
+        "copy": "Requirements, roadmaps & metrics"
+      },
+      {
+        "mark": "Ux",
+        "title": "UX & flows",
+        "copy": "Research translated into clarity"
+      },
+      {
+        "mark": "Gt",
+        "title": "GTM thinking",
+        "copy": "Markets, positioning & growth"
+      },
+      {
+        "mark": "Vc",
+        "title": "Visual craft",
+        "copy": "Decks and systems that communicate"
+      }
+    ],
+    "projectsTitle": "Selected work across product and visual design.",
+    "projects": [
+      {
+        "slug": "product-wireframes",
+        "discipline": "UX structure & interaction",
+        "title": "Product Wireframes",
+        "summary": "Early-stage flows translated into clear, reviewable interface systems.",
+        "image": "/assets/images/wireframes-cover.webp",
+        "imageAlt": "Editorial arrangement of mobile and desktop wireframes"
+      },
+      {
+        "slug": "product-decks",
+        "discipline": "Narrative & presentation design",
+        "title": "Product Decks",
+        "summary": "Complex product ideas shaped into focused stories people can follow.",
+        "image": "/assets/images/decks-cover.webp",
+        "imageAlt": "Editorial presentation deck pages on a warm studio surface"
+      },
+      {
+        "slug": "visual-systems",
+        "discipline": "Graphic design & identity",
+        "title": "Visual Systems",
+        "summary": "Graphic languages built to stay coherent across formats and moments.",
+        "image": "/assets/images/visual-systems-cover.webp",
+        "imageAlt": "Black, ivory, and crimson graphic design artifacts"
+      }
+    ],
+    "experienceTitle": "Work experience",
+    "experienceIntro": "Product delivery, user experience, and creative leadership across SaaS, design, and large-scale student organizations.",
+    "experience": [
+      {
+        "role": "Product Manager",
+        "organization": "Desk365",
+        "period": "May 2026 — Jul 2026",
+        "description": "Led delivery across Audit Logs, Multiple Support Portals, and Empty State UX—from requirements and user stories through cross-functional release coordination.",
+        "skills": "PRDs · Jira · Product delivery · Cross-functional collaboration"
+      },
+      {
+        "role": "UI/UX Intern",
+        "organization": "Hextasy.in",
+        "period": "May 2025 — Jul 2025",
+        "description": "Translated user needs and business goals into user flows, wireframes, prototypes, and scalable product experiences in partnership with developers and stakeholders.",
+        "skills": "Figma · Wireframing · Prototyping · UX research"
+      },
+      {
+        "role": "Creatives & Design Core",
+        "organization": "Shaastra, IIT Madras",
+        "period": "Mar 2025 — Feb 2026",
+        "description": "Led a four-tier creative team of 80+ students, trained 40+ coordinators, managed a ₹3L+ budget, and helped grow the festival’s social reach through design-led campaigns.",
+        "skills": "Creative leadership · Campaign strategy · Team management · Visual design"
+      }
+    ]
+  },
+  "caseStudies": {
+    "product-wireframes": {
+      "discipline": "UX structure & interaction",
+      "title": "Product Wireframes",
+      "summary": "Early-stage flows translated into clear, reviewable interface systems.",
+      "year": "Selected work",
+      "note": "Replace this starter content with the real brief, process, images, and outcomes for this project.",
+      "image": "/assets/images/wireframes-cover.webp",
+      "imageAlt": "Editorial arrangement of mobile and desktop wireframes",
+      "overviewTitle": "Project overview",
+      "overview": "A case-study template for documenting the problem, user flow, key decisions, and the evolution from rough structure to a resolved interface.",
+      "deliverablesLabel": "Deliverables",
+      "deliverables": [
+        "User flows",
+        "Low-fidelity wireframes",
+        "Interaction notes"
+      ],
+      "pdfTitle": "Project PDF",
+      "pdfBody": "Upload a deck or case-study PDF to Assets, then add its URL to this project’s pdfUrl field.",
+      "pdfStatus": "PDF ready to connect",
+      "pdfUrl": ""
+    },
+    "visual-systems": {
+      "discipline": "Graphic design & identity",
+      "title": "Visual Systems",
+      "summary": "Graphic languages built to stay coherent across formats and moments.",
+      "year": "Selected work",
+      "note": "Replace this starter content with the real brief, process, images, and outcomes for this project.",
+      "image": "/assets/images/visual-systems-cover.webp",
+      "imageAlt": "Black, ivory, and crimson graphic design artifacts",
+      "overviewTitle": "Project overview",
+      "overview": "A visual case-study format for presenting concept development, layout rules, key applications, and a final collection of assets.",
+      "deliverablesLabel": "Deliverables",
+      "deliverables": [
+        "Art direction",
+        "Layout system",
+        "Graphic applications"
+      ],
+      "pdfTitle": "Project PDF",
+      "pdfBody": "Upload a deck or case-study PDF to Assets, then add its URL to this project’s pdfUrl field.",
+      "pdfStatus": "PDF ready to connect",
+      "pdfUrl": ""
+    }
+  },
+  "deckGallery": {
+    "title": "Product Decks",
+    "backLabel": "All projects",
+    "items": [
+      {
+        "title": "Flipkart Gen Z Commerce Strategy",
+        "image": "/assets/images/deck-flipkart.webp",
+        "imageAlt": "Graphic collage representing creator-led Gen Z commerce and mobile discovery",
+        "pdfUrl": ""
+      },
+      {
+        "title": "Premium EV Market Entry Strategy",
+        "image": "/assets/images/deck-ev-market.webp",
+        "imageAlt": "Electric vehicle and market growth network over an abstract map of India",
+        "pdfUrl": ""
+      },
+      {
+        "title": "RIVA — AI Hyperlocal Travel GTM",
+        "image": "/assets/images/deck-riva.webp",
+        "imageAlt": "Hyperlocal city map with travel recommendations and route markers",
+        "pdfUrl": ""
+      },
+      {
+        "title": "Desk365 Audit Logs PRD",
+        "image": "/assets/images/deck-audit-logs.webp",
+        "imageAlt": "Dark product interface illustrating filtered audit log events",
+        "pdfUrl": ""
+      },
+      {
+        "title": "Desk365 Multiple Support Portals PRD",
+        "image": "/assets/images/deck-support-portals.webp",
+        "imageAlt": "Multiple support portal interfaces connected to one central workspace",
+        "pdfUrl": ""
+      },
+      {
+        "title": "Tata Imagination Challenge",
+        "image": "/assets/images/deck-tata.webp",
+        "imageAlt": "Business strategy cards, opportunity maps, and decision paths",
+        "pdfUrl": ""
+      }
+    ]
+  }
+}

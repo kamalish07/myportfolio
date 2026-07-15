@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<title>Kamalish — Product Design Portfolio</title>
+<meta name="description" content="Product decks, wireframes, and graphic design presented through clear, artifact-led case studies.">
+<link rel="stylesheet" href="assets/css/site.css">
+<script src="assets/js/theme-core.js"></script>
+<script src="assets/js/theme-apply.js"></script>
+<script src="assets/js/render.js" defer></script>
+<script src="assets/js/sections.js" defer></script>
+</head>
+<body data-title-path="site.title">
+<div class="home-page min-h-screen bg-ploy-background-primary text-ploy-text-primary">
+
+<header class="nav border-b border-ploy-border-primary bg-ploy-background-primary text-ploy-text-primary">
+  <nav class="nav__container mx-auto flex min-h-18 max-w-7xl items-center justify-between gap-4 px-5 md:px-8" aria-label="Primary navigation">
+    <a class="nav__logo font-heading text-2xl font-semibold tracking-tight md:text-3xl" href="./" aria-label="Kamalish portfolio home" data-cms="site.nav.logo">Kamalish</a>
+    <div class="nav__actions flex items-center justify-end gap-5">
+      <a class="nav__link text-sm text-ploy-text-primary transition-opacity hover:opacity-55" href="#work" data-cms="site.nav.links.0.label" data-cms-href="site.nav.links.0.href">Projects</a>
+      <a class="nav__link hidden text-sm text-ploy-text-primary transition-opacity hover:opacity-55 sm:inline" href="#about" data-cms="site.nav.links.1.label" data-cms-href="site.nav.links.1.href">Profile</a>
+    </div>
+  </nav>
+</header>
+
+<main class="home-page__main">
+
+  <section class="hero overflow-x-hidden border-b border-ploy-border-primary bg-ploy-background-primary">
+    <div class="hero__content grid min-h-[590px] md:min-h-[680px] md:grid-cols-2">
+      <div class="hero__copy flex w-full max-w-xl items-center justify-self-end px-5 py-16 md:px-8 md:py-20">
+        <div class="hero__intro">
+          <h1 class="hero__title font-heading text-balance text-5xl leading-[1.02] tracking-tight sm:text-6xl md:whitespace-nowrap md:text-6xl" data-cms="home.hero.title">Hi, I’m Kamalish</h1>
+          <p class="hero__subtitle mt-7 max-w-lg text-base leading-relaxed text-ploy-text-secondary md:text-lg" data-cms="home.hero.subtitle">An aspiring product manager at IIT Madras, working at the intersection of product strategy, user experience, and visual storytelling.</p>
+          <div class="hero__actions mt-8">
+            <a class="button-link typography-button inline-flex items-center justify-center rounded-button border px-5 py-3 text-sm transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 button-link--primary border-ploy-button-primary-border bg-ploy-button-primary-background text-ploy-button-primary-text hover:opacity-80 hero__cta" href="#work" data-cms="home.hero.ctaLabel" data-cms-href="home.hero.ctaHref">See projects</a>
+          </div>
+        </div>
+      </div>
+      <div class="hero__media min-h-[420px] overflow-hidden md:min-h-[680px]">
+        <img class="hero__image h-full w-full object-cover object-[center_20%]" src="assets/images/hero-desk.webp" alt="Editorial desk with wireframes, product artifacts, and a crimson notebook" data-cms-src="home.hero.image" data-cms-alt="home.hero.imageAlt">
+      </div>
+    </div>
+  </section>
+
+  <section class="practice border-b border-ploy-border-primary bg-ploy-background-primary" aria-label="Product management capabilities">
+    <div class="practice__grid mx-auto grid max-w-7xl grid-cols-2 px-5 md:grid-cols-4 md:px-8" data-cms-list="home.practice">
+      <template>
+        <div class="practice__item flex min-h-28 items-center gap-4 border-ploy-border-primary py-6 odd:border-r odd:pr-4 even:pl-4 md:min-h-32 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0">
+          <span class="practice__mark font-heading text-3xl" aria-hidden="true" data-f="mark"></span>
+          <div class="practice__text">
+            <h2 class="practice__title text-sm font-semibold" data-f="title"></h2>
+            <p class="practice__copy mt-1 text-xs text-ploy-text-secondary" data-f="copy"></p>
+          </div>
+        </div>
+      </template>
+      <div class="practice__item flex min-h-28 items-center gap-4 border-ploy-border-primary py-6 odd:border-r odd:pr-4 even:pl-4 md:min-h-32 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0">
+        <span class="practice__mark font-heading text-3xl" aria-hidden="true">Ps</span>
+        <div class="practice__text"><h2 class="practice__title text-sm font-semibold">Product strategy</h2><p class="practice__copy mt-1 text-xs text-ploy-text-secondary">Requirements, roadmaps &amp; metrics</p></div>
+      </div>
+      <div class="practice__item flex min-h-28 items-center gap-4 border-ploy-border-primary py-6 odd:border-r odd:pr-4 even:pl-4 md:min-h-32 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0">
+        <span class="practice__mark font-heading text-3xl" aria-hidden="true">Ux</span>
+        <div class="practice__text"><h2 class="practice__title text-sm font-semibold">UX &amp; flows</h2><p class="practice__copy mt-1 text-xs text-ploy-text-secondary">Research translated into clarity</p></div>
+      </div>
+      <div class="practice__item flex min-h-28 items-center gap-4 border-ploy-border-primary py-6 odd:border-r odd:pr-4 even:pl-4 md:min-h-32 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0">
+        <span class="practice__mark font-heading text-3xl" aria-hidden="true">Gt</span>
+        <div class="practice__text"><h2 class="practice__title text-sm font-semibold">GTM thinking</h2><p class="practice__copy mt-1 text-xs text-ploy-text-secondary">Markets, positioning &amp; growth</p></div>
+      </div>
+      <div class="practice__item flex min-h-28 items-center gap-4 border-ploy-border-primary py-6 odd:border-r odd:pr-4 even:pl-4 md:min-h-32 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0">
+        <span class="practice__mark font-heading text-3xl" aria-hidden="true">Vc</span>
+        <div class="practice__text"><h2 class="practice__title text-sm font-semibold">Visual craft</h2><p class="practice__copy mt-1 text-xs text-ploy-text-secondary">Decks and systems that communicate</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects bg-ploy-background-primary px-5 py-20 md:px-8 md:py-28" id="work">
+    <div class="projects__container mx-auto max-w-7xl">
+      <div class="projects__header mb-10 border-b border-ploy-border-primary pb-6 md:mb-12">
+        <h2 class="projects__title font-heading text-balance text-4xl leading-tight tracking-tight md:whitespace-nowrap md:text-4xl lg:text-5xl" data-cms="home.projectsTitle">Selected work across product and visual design.</h2>
+      </div>
+      <div class="projects__grid grid gap-5 md:grid-cols-3" data-cms-list="home.projects">
+        <template>
+          <article class="project-card group border border-ploy-border-primary bg-ploy-background-secondary">
+            <a class="project-card__link block focus-visible:outline-2 focus-visible:outline-offset-2" data-f-href="slug" data-href-prefix="/work/">
+              <div class="project-card__media aspect-[4/3] overflow-hidden border-b border-ploy-border-primary">
+                <img class="project-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" data-f-src="image" data-f-alt="imageAlt" loading="lazy">
+              </div>
+              <div class="project-card__body flex min-h-52 flex-col p-5 md:p-6">
+                <div class="project-card__meta flex items-start justify-between gap-4">
+                  <p class="project-card__discipline text-xs text-ploy-text-secondary" data-f="discipline"></p>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right project-card__icon size-4 shrink-0" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+                </div>
+                <h3 class="project-card__title mt-7 font-heading text-3xl leading-tight" data-f="title"></h3>
+                <p class="project-card__summary mt-3 text-sm leading-relaxed text-ploy-text-secondary" data-f="summary"></p>
+              </div>
+            </a>
+          </article>
+        </template>
+        <article class="project-card group border border-ploy-border-primary bg-ploy-background-secondary">
+          <a class="project-card__link block focus-visible:outline-2 focus-visible:outline-offset-2" href="work/product-wireframes/">
+            <div class="project-card__media aspect-[4/3] overflow-hidden border-b border-ploy-border-primary"><img class="project-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" src="assets/images/wireframes-cover.webp" alt="Editorial arrangement of mobile and desktop wireframes" loading="lazy"></div>
+            <div class="project-card__body flex min-h-52 flex-col p-5 md:p-6">
+              <div class="project-card__meta flex items-start justify-between gap-4"><p class="project-card__discipline text-xs text-ploy-text-secondary">UX structure &amp; interaction</p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right project-card__icon size-4 shrink-0" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></div>
+              <h3 class="project-card__title mt-7 font-heading text-3xl leading-tight">Product Wireframes</h3>
+              <p class="project-card__summary mt-3 text-sm leading-relaxed text-ploy-text-secondary">Early-stage flows translated into clear, reviewable interface systems.</p>
+            </div>
+          </a>
+        </article>
+        <article class="project-card group border border-ploy-border-primary bg-ploy-background-secondary">
+          <a class="project-card__link block focus-visible:outline-2 focus-visible:outline-offset-2" href="work/product-decks/">
+            <div class="project-card__media aspect-[4/3] overflow-hidden border-b border-ploy-border-primary"><img class="project-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" src="assets/images/decks-cover.webp" alt="Editorial presentation deck pages on a warm studio surface" loading="lazy"></div>
+            <div class="project-card__body flex min-h-52 flex-col p-5 md:p-6">
+              <div class="project-card__meta flex items-start justify-between gap-4"><p class="project-card__discipline text-xs text-ploy-text-secondary">Narrative &amp; presentation design</p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right project-card__icon size-4 shrink-0" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></div>
+              <h3 class="project-card__title mt-7 font-heading text-3xl leading-tight">Product Decks</h3>
+              <p class="project-card__summary mt-3 text-sm leading-relaxed text-ploy-text-secondary">Complex product ideas shaped into focused stories people can follow.</p>
+            </div>
+          </a>
+        </article>
+        <article class="project-card group border border-ploy-border-primary bg-ploy-background-secondary">
+          <a class="project-card__link block focus-visible:outline-2 focus-visible:outline-offset-2" href="work/visual-systems/">
+            <div class="project-card__media aspect-[4/3] overflow-hidden border-b border-ploy-border-primary"><img class="project-card__image h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" src="assets/images/visual-systems-cover.webp" alt="Black, ivory, and crimson graphic design artifacts" loading="lazy"></div>
+            <div class="project-card__body flex min-h-52 flex-col p-5 md:p-6">
+              <div class="project-card__meta flex items-start justify-between gap-4"><p class="project-card__discipline text-xs text-ploy-text-secondary">Graphic design &amp; identity</p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right project-card__icon size-4 shrink-0" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></div>
+              <h3 class="project-card__title mt-7 font-heading text-3xl leading-tight">Visual Systems</h3>
+              <p class="project-card__summary mt-3 text-sm leading-relaxed text-ploy-text-secondary">Graphic languages built to stay coherent across formats and moments.</p>
+            </div>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="experience border-y border-ploy-border-primary bg-ploy-background-secondary px-5 py-16 md:px-8 md:py-24" id="experience">
+    <div class="experience__container mx-auto max-w-7xl">
+      <div class="experience__header mb-10 border-b border-ploy-border-primary pb-7 md:mb-14">
+        <h2 class="experience__title font-heading text-balance text-4xl leading-tight tracking-tight md:text-6xl" data-cms="home.experienceTitle">Work experience</h2>
+        <p class="experience__intro mt-5 max-w-2xl text-base leading-relaxed text-ploy-text-secondary" data-cms="home.experienceIntro">Product delivery, user experience, and creative leadership across SaaS, design, and large-scale student organizations.</p>
+      </div>
+      <div class="experience__list grid gap-4" data-cms-list="home.experience">
+        <template>
+          <article class="experience__item grid gap-5 rounded-card border border-ploy-border-primary bg-ploy-neutral-primary-s5 p-6 text-ploy-text-primary md:grid-cols-[0.7fr_1.25fr_0.8fr] md:gap-10 md:p-8">
+            <div class="experience__role-block">
+              <h3 class="experience__role font-heading text-2xl leading-tight md:text-3xl" data-f="role"></h3>
+              <p class="experience__organization mt-2 text-sm font-semibold" data-f="organization"></p>
+              <p class="experience__period mt-1 text-sm text-ploy-text-secondary" data-f="period"></p>
+            </div>
+            <p class="experience__description text-base leading-relaxed text-ploy-text-secondary" data-f="description"></p>
+            <div class="experience__skills border-t border-ploy-border-primary pt-4 md:border-l md:border-t-0 md:pl-8 md:pt-0">
+              <h4 class="experience__skills-title text-sm font-semibold">Skills</h4>
+              <p class="experience__skills-list mt-3 text-sm leading-relaxed text-ploy-text-secondary" data-f="skills"></p>
+            </div>
+          </article>
+        </template>
+        <article class="experience__item grid gap-5 rounded-card border border-ploy-border-primary bg-ploy-neutral-primary-s5 p-6 text-ploy-text-primary md:grid-cols-[0.7fr_1.25fr_0.8fr] md:gap-10 md:p-8">
+          <div class="experience__role-block"><h3 class="experience__role font-heading text-2xl leading-tight md:text-3xl">Product Manager</h3><p class="experience__organization mt-2 text-sm font-semibold">Desk365</p><p class="experience__period mt-1 text-sm text-ploy-text-secondary">May 2026 — Jul 2026</p></div>
+          <p class="experience__description text-base leading-relaxed text-ploy-text-secondary">Led delivery across Audit Logs, Multiple Support Portals, and Empty State UX—from requirements and user stories through cross-functional release coordination.</p>
+          <div class="experience__skills border-t border-ploy-border-primary pt-4 md:border-l md:border-t-0 md:pl-8 md:pt-0"><h4 class="experience__skills-title text-sm font-semibold">Skills</h4><p class="experience__skills-list mt-3 text-sm leading-relaxed text-ploy-text-secondary">PRDs · Jira · Product delivery · Cross-functional collaboration</p></div>
+        </article>
+        <article class="experience__item grid gap-5 rounded-card border border-ploy-border-primary bg-ploy-neutral-primary-s5 p-6 text-ploy-text-primary md:grid-cols-[0.7fr_1.25fr_0.8fr] md:gap-10 md:p-8">
+          <div class="experience__role-block"><h3 class="experience__role font-heading text-2xl leading-tight md:text-3xl">UI/UX Intern</h3><p class="experience__organization mt-2 text-sm font-semibold">Hextasy.in</p><p class="experience__period mt-1 text-sm text-ploy-text-secondary">May 2025 — Jul 2025</p></div>
+          <p class="experience__description text-base leading-relaxed text-ploy-text-secondary">Translated user needs and business goals into user flows, wireframes, prototypes, and scalable product experiences in partnership with developers and stakeholders.</p>
+          <div class="experience__skills border-t border-ploy-border-primary pt-4 md:border-l md:border-t-0 md:pl-8 md:pt-0"><h4 class="experience__skills-title text-sm font-semibold">Skills</h4><p class="experience__skills-list mt-3 text-sm leading-relaxed text-ploy-text-secondary">Figma · Wireframing · Prototyping · UX research</p></div>
+        </article>
+        <article class="experience__item grid gap-5 rounded-card border border-ploy-border-primary bg-ploy-neutral-primary-s5 p-6 text-ploy-text-primary md:grid-cols-[0.7fr_1.25fr_0.8fr] md:gap-10 md:p-8">
+          <div class="experience__role-block"><h3 class="experience__role font-heading text-2xl leading-tight md:text-3xl">Creatives &amp; Design Core</h3><p class="experience__organization mt-2 text-sm font-semibold">Shaastra, IIT Madras</p><p class="experience__period mt-1 text-sm text-ploy-text-secondary">Mar 2025 — Feb 2026</p></div>
+          <p class="experience__description text-base leading-relaxed text-ploy-text-secondary">Led a four-tier creative team of 80+ students, trained 40+ coordinators, managed a ₹3L+ budget, and helped grow the festival’s social reach through design-led campaigns.</p>
+          <div class="experience__skills border-t border-ploy-border-primary pt-4 md:border-l md:border-t-0 md:pl-8 md:pt-0"><h4 class="experience__skills-title text-sm font-semibold">Skills</h4><p class="experience__skills-list mt-3 text-sm leading-relaxed text-ploy-text-secondary">Creative leadership · Campaign strategy · Team management · Visual design</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+<div class="custom-sections" data-page="home"></div>
+</main>
+
+<footer class="footer bg-ploy-background-inverse text-ploy-text-inverse" id="about">
+  <div class="footer__container mx-auto grid max-w-7xl gap-14 px-5 py-16 md:grid-cols-[1.4fr_1fr] md:px-8 md:py-24">
+    <div class="footer__statement max-w-2xl">
+      <h2 class="footer__title font-heading text-balance text-4xl leading-tight tracking-tight md:text-6xl" data-cms="site.footer.title">Clear thinking deserves a clear form.</h2>
+      <p class="footer__copy mt-6 max-w-lg text-base text-ploy-text-inverse-secondary" data-cms="site.footer.copy">This portfolio is designed to grow with real decks, wireframes, visual systems, and detailed project stories.</p>
+    </div>
+    <div class="footer__meta flex flex-col justify-between gap-10 border-t border-ploy-border-inverse pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+      <div class="footer__links flex flex-col gap-3" data-cms-list="site.footer.links">
+        <template><a class="footer__link text-sm transition-opacity hover:opacity-60" data-f="label" data-f-href="href"></a></template>
+        <a class="footer__link text-sm transition-opacity hover:opacity-60" href="#work">Selected work</a>
+        <a class="footer__link text-sm transition-opacity hover:opacity-60" href="#experience">Experience</a>
+        <a class="footer__link text-sm transition-opacity hover:opacity-60" href="./">Home</a>
+      </div>
+      <div class="footer__bottom flex items-center justify-between gap-4">
+        <p class="footer__copyright text-sm text-ploy-text-inverse-secondary">© <span data-cms="site.footer.copyrightYear">2026</span> <span data-cms="site.footer.copyrightName">Kamalish</span></p>
+        <span class="footer__linkedin footer__linkedin--pending inline-flex size-10 items-center justify-center rounded-button border border-ploy-border-inverse text-ploy-text-inverse-secondary" aria-label="LinkedIn link coming soon" data-cms-linkedin="site.footer.linkedinUrl">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin footer__linkedin-icon size-4" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

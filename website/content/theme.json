@@ -1,0 +1,15 @@
+{
+  "colors": {
+    "background": "#f4f1ec",
+    "surface": "#e9e6e0",
+    "ink": "#090706",
+    "onDark": "#de9c9c",
+    "accent": "#89221c"
+  },
+  "fonts": {
+    "headingPreset": "playfair",
+    "headingCustom": "",
+    "bodyPreset": "inter",
+    "bodyCustom": ""
+  }
+}
