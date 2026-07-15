@@ -1,13 +1,13 @@
 {
   "colors": {
-    "background": "#000000",
-    "surface": "#000000",
-    "ink": "#090706",
+    "background": "#ffffff",
+    "surface": "#ffffff",
+    "ink": "#000000",
     "onDark": "#ffffff",
-    "accent": "#89221c",
+    "accent": "#c68480",
     "bg": "#ffffff",
-    "headerBg": "#171412",
-    "footerBg": "#ffffff"
+    "headerBg": "#ffffff",
+    "footerBg": "#000000"
   },
   "fonts": {
     "headingPreset": "playfair",
