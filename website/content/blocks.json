@@ -71,11 +71,6 @@
           "key": "media"
         },
         {
-          "id": "default:pdf",
-          "type": "default_section",
-          "key": "pdf"
-        },
-        {
           "id": "default:hero",
           "type": "default_section",
           "key": "hero"
