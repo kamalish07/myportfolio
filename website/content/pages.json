@@ -1,0 +1,8 @@
+{
+  "pages": [
+    { "slug": "home", "path": "/", "label": "Home", "builtin": true },
+    { "slug": "product-wireframes", "path": "/work/product-wireframes/", "label": "Wireframes", "builtin": true },
+    { "slug": "product-decks", "path": "/work/product-decks/", "label": "Decks", "builtin": true },
+    { "slug": "visual-systems", "path": "/work/visual-systems/", "label": "Visual Systems", "builtin": true }
+  ]
+}

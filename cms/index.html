@@ -64,7 +64,7 @@
   .itemtools button.del:hover { color: var(--accent); border-color: var(--accent); }
   .addbtn { background: none; border: 1px dashed var(--muted); color: var(--muted); width: 100%; padding: 9px; border-radius: 5px; font-size: 13.5px; }
   .addbtn:hover { color: var(--accent); border-color: var(--accent); }
-  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 5px; font-size: 14px; opacity: 0; transform: translateY(8px); transition: all .25s; pointer-events: none; }
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 5px; font-size: 14px; opacity: 0; transform: translateY(8px); transition: all .25s; pointer-events: none; z-index: 9999; }
   .toast.show { opacity: 1; transform: none; }
   .toast.err { background: var(--accent); }
 
@@ -86,7 +86,7 @@
   .appearance__actions #themeStatus.saved { color: var(--ok); }
   #themeSaveBtn { background: var(--accent); color: #fff; border: 0; padding: 9px 20px; font-size: 14px; font-weight: 600; border-radius: 3px; }
   #themeSaveBtn:disabled { opacity: .45; cursor: default; }
-  .appearance__pagebar { display: flex; gap: 8px; margin-bottom: 10px; }
+  .appearance__pagebar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
   .appearance__pagebar button { background: #fff; border: 1px solid var(--line); border-radius: 3px; padding: 6px 13px; font-size: 12.5px; }
   .appearance__pagebar button.active { border-color: var(--accent); color: var(--accent); font-weight: 600; }
   #themeFrame { width: 100%; height: 70vh; min-height: 480px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
@@ -98,6 +98,8 @@
   #sectionsList { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
   #sectionsList button { text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px; font-size: 13px; }
   #sectionsList button.active { border-color: #2563eb; color: #2563eb; font-weight: 600; }
+  #sectionsList button.default-sec { border-left: 3px solid #7c3aed; }
+  #sectionsList button.default-sec.active { border-color: #7c3aed; color: #7c3aed; }
   #blocksInspector { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 14px; }
   #blocksInspector h3 { margin: 0 0 12px; font-size: 15px; }
   #blocksInspector p.hint { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
@@ -117,6 +119,42 @@
   .stylerow .row { display: flex; gap: 8px; margin-bottom: 8px; }
   .stylerow select, .stylerow input[type=number], .stylerow input[type=text] { flex: 1; min-width: 0; padding: 7px 9px; font: inherit; font-size: 13px; border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--ink); }
   .stylerow input[type=color] { width: 40px; height: 33px; padding: 2px; border: 1px solid var(--line); border-radius: 4px; background: #fff; }
+
+  /* --- FULLSCREEN --- */
+  .fullscreen-btn { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #fff; border-radius: 4px; padding: 5px 12px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .fullscreen-btn:hover { background: rgba(255,255,255,.2); }
+  .appearance--fullscreen { position: fixed; inset: 0; z-index: 100; background: #1a1816; overflow: hidden; border-bottom: none; }
+  .appearance--fullscreen .appearance__inner { max-width: none; height: 100%; padding: 0; gap: 0; grid-template-columns: 1fr; grid-template-rows: 1fr; }
+  .appearance--fullscreen .appearance__controls { position: fixed; left: 0; top: 0; bottom: 0; width: 380px; z-index: 110; background: var(--paper); border-right: 1px solid var(--line); overflow-y: auto; padding: 20px 22px 30px; box-shadow: 4px 0 24px rgba(0,0,0,.15); transition: transform .25s; }
+  .appearance--fullscreen .appearance__controls.collapsed { transform: translateX(-100%); }
+  .appearance--fullscreen .appearance__preview { height: 100%; display: flex; flex-direction: column; }
+  .appearance--fullscreen .appearance__pagebar { padding: 10px 16px 10px 50px; background: #222; margin: 0; border-radius: 0; }
+  .appearance--fullscreen .appearance__pagebar button { background: #333; color: #ccc; border-color: #444; }
+  .appearance--fullscreen .appearance__pagebar button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .appearance--fullscreen #themeFrame { flex: 1; border: none; border-radius: 0; min-height: 0; height: 100%; }
+  .fs-close { position: fixed; top: 10px; right: 16px; z-index: 120; background: rgba(0,0,0,.7); color: #fff; border: none; border-radius: 4px; padding: 6px 14px; font-size: 13px; cursor: pointer; }
+  .fs-close:hover { background: var(--accent); }
+  .fs-toggle-sidebar { position: fixed; top: 10px; left: 10px; z-index: 120; background: rgba(0,0,0,.7); color: #fff; border: none; border-radius: 4px; padding: 6px 12px; font-size: 16px; cursor: pointer; line-height: 1; }
+  .fs-toggle-sidebar:hover { background: var(--accent); }
+  .fs-controls-hidden { display: none; }
+
+  /* Section divider labels */
+  .sec-divider { font-size: 10px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); padding: 10px 0 4px; }
+
+  /* Add page modal */
+  .modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
+  .modal { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 28px 30px 24px; width: 420px; max-width: 90vw; box-shadow: 0 16px 48px rgba(0,0,0,.2); }
+  .modal h3 { margin: 0 0 6px; font-size: 18px; }
+  .modal p { margin: 0 0 16px; font-size: 13px; color: var(--muted); }
+  .modal .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+  .modal .modal-actions button { padding: 8px 18px; font-size: 14px; border-radius: 4px; font-weight: 600; }
+  .modal .modal-cancel { background: #fff; border: 1px solid var(--line); color: var(--ink); }
+  .modal .modal-confirm { background: var(--accent); border: none; color: #fff; }
+
+  /* Add page button */
+  .add-page-btn { background: none; border: 1px dashed var(--muted); color: var(--muted); border-radius: 3px; padding: 5px 10px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+  .add-page-btn:hover { color: var(--accent); border-color: var(--accent); }
+
   @media (max-width: 900px) { .appearance__inner { grid-template-columns: 1fr; } }
   @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } nav.toc { position: static; flex-direction: row; flex-wrap: wrap; } }
 </style>
@@ -133,6 +171,7 @@
     <a data-site-link="/work/visual-systems/" target="_blank">Visual Systems ↗</a>
   </div>
   <div class="spacer"></div>
+  <button class="fullscreen-btn" id="fullscreenBtn" type="button">⛶ Fullscreen</button>
   <span id="status">Loading…</span>
   <button id="saveBtn" disabled>Save changes</button>
 </header>
@@ -151,7 +190,7 @@
       </div>
       <div id="tab-appearance">
         <h2>Appearance</h2>
-        <p class="hint">Colors and fonts used across every page. Changes appear instantly in the preview — nothing is saved until you click “Save appearance”.</p>
+        <p class="hint">Colors and fonts used across every page. Changes appear instantly in the preview — nothing is saved until you click "Save appearance".</p>
         <div id="appearanceControls"></div>
         <div class="appearance__actions">
           <button id="themeResetBtn" class="btn-sm" type="button">Reset to defaults</button>
@@ -161,9 +200,12 @@
       </div>
       <div id="tab-sections" style="display:none">
         <h2>Sections — <span id="sectionsPageName">Home</span></h2>
-        <p class="hint">Free-form sections added to the bottom of the page. Click a section or block in the preview to select it; type directly into text, drag the blue handle to resize a block, the purple one to resize the section. Use the page buttons above the preview to switch pages.</p>
+        <p class="hint">Click a section in the preview or sidebar to select and edit it. Default sections (marked with 📌) support visual editing — background color and padding. Custom sections at the bottom can be freely added and composed.</p>
+        <div class="sec-divider">Page Sections</div>
+        <div id="defaultSectionsList"></div>
+        <div class="sec-divider" style="margin-top:12px">Custom Sections</div>
         <div id="sectionsList"></div>
-        <button id="addSectionBtn" class="addbtn" type="button">+ Add section to this page</button>
+        <button id="addSectionBtn" class="addbtn" type="button">+ Add custom section</button>
         <div id="blocksInspector"></div>
         <div class="appearance__actions">
           <span id="blocksStatus">Loading…</span>
@@ -172,11 +214,8 @@
       </div>
     </div>
     <div class="appearance__preview">
-      <div class="appearance__pagebar">
-        <button data-page="/" class="active" type="button">Home</button>
-        <button data-page="/work/product-wireframes/" type="button">Wireframes</button>
-        <button data-page="/work/product-decks/" type="button">Decks</button>
-        <button data-page="/work/visual-systems/" type="button">Visual Systems</button>
+      <div class="appearance__pagebar" id="pageBar">
+        <!-- Populated dynamically -->
       </div>
       <iframe id="themeFrame" title="Live theme preview"></iframe>
     </div>
@@ -218,7 +257,7 @@ const SCHEMA = [
       ]},
       { path: 'site.footer.copyrightYear', label: 'Copyright year' },
       { path: 'site.footer.copyrightName', label: 'Copyright name' },
-      { path: 'site.footer.linkedinUrl', label: 'LinkedIn URL (leave blank for “coming soon” badge)' },
+      { path: 'site.footer.linkedinUrl', label: 'LinkedIn URL (leave blank for "coming soon" badge)' },
     ],
   },
   {
@@ -245,7 +284,7 @@ const SCHEMA = [
   },
   {
     id: 'projects', title: 'Home — Projects',
-    hint: 'Cards in the “Selected work” grid. The slug is the /work/… page it links to.',
+    hint: 'Cards in the "Selected work" grid. The slug is the /work/… page it links to.',
     fields: [
       { path: 'home.projectsTitle', label: 'Section title' },
       { path: 'home.projects', label: 'Project cards', type: 'list', itemLabel: 'Project', item: [
@@ -313,7 +352,7 @@ function caseStudyFields(slug) {
     { path: p + 'pdfTitle', label: 'PDF section heading' },
     { path: p + 'pdfBody', label: 'PDF section text', type: 'textarea' },
     { path: p + 'pdfStatus', label: 'PDF status badge (shown when no PDF URL)' },
-    { path: p + 'pdfUrl', label: 'PDF URL (shows a “View PDF” button when set)' },
+    { path: p + 'pdfUrl', label: 'PDF URL (shows a "View PDF" button when set)' },
   ];
 }
 
@@ -714,6 +753,58 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
 
 <script src="/assets/js/theme-core.js"></script>
 <script>
+/* ==================== FULLSCREEN PREVIEW ==================== */
+(function () {
+  const appearance = document.getElementById('appearance');
+  const controls = document.querySelector('.appearance__controls');
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  let isFullscreen = false;
+  let closeBtn = null;
+  let sidebarBtn = null;
+
+  function enterFullscreen() {
+    isFullscreen = true;
+    appearance.classList.add('appearance--fullscreen');
+    // Create close button
+    closeBtn = document.createElement('button');
+    closeBtn.className = 'fs-close';
+    closeBtn.textContent = '✕ Exit';
+    closeBtn.addEventListener('click', exitFullscreen);
+    document.body.appendChild(closeBtn);
+    // Create sidebar toggle
+    sidebarBtn = document.createElement('button');
+    sidebarBtn.className = 'fs-toggle-sidebar';
+    sidebarBtn.textContent = '☰';
+    sidebarBtn.title = 'Toggle sidebar';
+    sidebarBtn.addEventListener('click', () => {
+      controls.classList.toggle('collapsed');
+    });
+    document.body.appendChild(sidebarBtn);
+    fullscreenBtn.textContent = '⊠ Exit Fullscreen';
+  }
+
+  function exitFullscreen() {
+    isFullscreen = false;
+    appearance.classList.remove('appearance--fullscreen');
+    controls.classList.remove('collapsed');
+    if (closeBtn) { closeBtn.remove(); closeBtn = null; }
+    if (sidebarBtn) { sidebarBtn.remove(); sidebarBtn = null; }
+    fullscreenBtn.textContent = '⛶ Fullscreen';
+  }
+
+  fullscreenBtn.addEventListener('click', () => {
+    if (isFullscreen) exitFullscreen();
+    else enterFullscreen();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isFullscreen) exitFullscreen();
+  });
+})();
+</script>
+
+<script>
+/* ==================== APPEARANCE / THEME ==================== */
 (function () {
   const DEFAULT_THEME = {
     colors: { background: '#f4f1ec', surface: '#e9e6e0', ink: '#090706', onDark: '#ffffff', accent: '#89221c' },
@@ -738,9 +829,6 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
   }
 
   function applyToPreview() {
-    // The preview iframe loads the website on its own origin/port, so we
-    // can't touch its DOM directly — post the draft theme across instead.
-    // website/assets/js/theme-apply.js listens for this and applies it.
     if (!theme) return;
     try {
       frame.contentWindow.postMessage({ type: 'ploy-theme-preview', theme: theme }, window.WEBSITE_ORIGIN);
@@ -819,15 +907,9 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
     );
   }
 
-  document.querySelectorAll('.appearance__pagebar button').forEach((b) => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('.appearance__pagebar button').forEach((x) => x.classList.remove('active'));
-      b.classList.add('active');
-      frame.src = window.WEBSITE_ORIGIN + b.dataset.page;
-    });
-  });
+  // Page bar is now built dynamically — see the Sections editor script below.
+  // We just wire frame load here.
   frame.addEventListener('load', applyToPreview);
-  frame.src = window.WEBSITE_ORIGIN + '/';
 
   themeResetBtn.addEventListener('click', () => {
     theme = JSON.parse(JSON.stringify(DEFAULT_THEME));
@@ -876,28 +958,22 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
     buildAppearanceForm();
     themeStatus.textContent = 'All changes saved';
     themeStatus.className = 'saved';
-    applyToPreview(); // in case the iframe already finished loading before this fetch resolved
+    applyToPreview();
   })();
 })();
 </script>
 
 <script>
-/* ---------------- Sections editor (blocks.json) ---------------- */
+/* ==================== SECTIONS EDITOR (blocks.json) ==================== */
 (function () {
   const frame = document.getElementById('themeFrame');
   const ORIGIN = window.WEBSITE_ORIGIN;
-  const PAGE_KEYS = {
-    '/': 'home',
-    '/work/product-wireframes/': 'product-wireframes',
-    '/work/product-decks/': 'product-decks',
-    '/work/visual-systems/': 'visual-systems',
-  };
-  const PAGE_NAMES = {
-    home: 'Home',
-    'product-wireframes': 'Wireframes',
-    'product-decks': 'Decks',
-    'visual-systems': 'Visual Systems',
-  };
+
+  // Dynamic pages — loaded from /api/pages
+  let pagesData = { pages: [] };
+  let currentPage = 'home';
+  let currentPagePath = '/';
+
   const TAG_OPTIONS = [
     { v: 'h1', l: 'Heading 1' },
     { v: 'h2', l: 'Heading 2' },
@@ -908,20 +984,23 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
 
   let blocksData = null;
   let blocksDirty = false;
-  let currentPage = 'home';
   let selected = { s: null, b: null };
   let editMode = false;
+  let knownDefaultSections = []; // sent from the preview iframe
 
   const statusEl = document.getElementById('blocksStatus');
   const saveBtn = document.getElementById('blocksSaveBtn');
   const listEl = document.getElementById('sectionsList');
+  const defaultListEl = document.getElementById('defaultSectionsList');
   const inspector = document.getElementById('blocksInspector');
   const pageNameEl = document.getElementById('sectionsPageName');
+  const pageBar = document.getElementById('pageBar');
 
   const uid = (p) => p + '_' + Math.random().toString(36).slice(2, 9);
   function cur() {
-    if (!blocksData.pages[currentPage]) blocksData.pages[currentPage] = { sections: [] };
+    if (!blocksData.pages[currentPage]) blocksData.pages[currentPage] = { sections: [], defaultOverrides: {} };
     if (!blocksData.pages[currentPage].sections) blocksData.pages[currentPage].sections = [];
+    if (!blocksData.pages[currentPage].defaultOverrides) blocksData.pages[currentPage].defaultOverrides = {};
     return blocksData.pages[currentPage];
   }
   const findSec = (id) => cur().sections.find((s) => s.id === id);
@@ -937,7 +1016,13 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
   function push() {
     if (!blocksData) return;
     try {
-      frame.contentWindow.postMessage({ type: 'ploy-blocks-preview', sections: cur().sections, editMode, selected }, ORIGIN);
+      frame.contentWindow.postMessage({
+        type: 'ploy-blocks-preview',
+        sections: cur().sections,
+        editMode,
+        selected,
+        defaultOverrides: cur().defaultOverrides || {},
+      }, ORIGIN);
     } catch (e) {}
   }
 
@@ -967,23 +1052,113 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
   tabA.addEventListener('click', () => setTab(false));
   tabS.addEventListener('click', () => setTab(true));
 
-  // page switching rides on the existing pagebar (which reloads the iframe;
-  // the page announces ready and we re-push)
-  document.querySelectorAll('.appearance__pagebar button').forEach((b) => {
-    b.addEventListener('click', () => {
-      currentPage = PAGE_KEYS[b.dataset.page] || 'home';
-      selected = { s: null, b: null };
-      renderAll();
+  // ---- dynamic page bar ----
+  function buildPageBar() {
+    pageBar.innerHTML = '';
+    pagesData.pages.forEach((pg) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = pg.label;
+      b.dataset.page = pg.path;
+      b.dataset.slug = pg.slug;
+      if (pg.slug === currentPage) b.classList.add('active');
+      b.addEventListener('click', () => {
+        currentPage = pg.slug;
+        currentPagePath = pg.path;
+        pageBar.querySelectorAll('button').forEach((x) => x.classList.remove('active'));
+        b.classList.add('active');
+        frame.src = ORIGIN + pg.path;
+        selected = { s: null, b: null };
+        knownDefaultSections = [];
+        renderAll();
+      });
+      pageBar.append(b);
     });
-  });
+
+    // Add page button
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'add-page-btn';
+    addBtn.textContent = '+ Add page';
+    addBtn.addEventListener('click', showAddPageModal);
+    pageBar.append(addBtn);
+  }
+
+  function showAddPageModal() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+      <h3>Add New Page</h3>
+      <p>Create a new work page. It will appear in the page bar and can be linked from your navigation.</p>
+      <div class="field">
+        <label>Page title</label>
+        <input type="text" id="newPageTitle" placeholder="e.g. Brand Guidelines" autofocus>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-cancel" type="button">Cancel</button>
+        <button class="modal-confirm" type="button">Create page</button>
+      </div>
+    `;
+    overlay.append(modal);
+    document.body.append(overlay);
+
+    const titleInput = modal.querySelector('#newPageTitle');
+    const cancelBtn = modal.querySelector('.modal-cancel');
+    const confirmBtn = modal.querySelector('.modal-confirm');
+
+    cancelBtn.addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+    confirmBtn.addEventListener('click', async () => {
+      const title = titleInput.value.trim();
+      if (!title) { titleInput.focus(); return; }
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Creating…';
+      try {
+        const resp = await fetch('/api/pages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title }),
+        });
+        const out = await resp.json();
+        if (!resp.ok) throw new Error(out.error || 'Failed');
+        // Add to local pages data
+        pagesData.pages.push({ slug: out.slug, path: out.path, label: out.label, builtin: false });
+        buildPageBar();
+        toast('Page "' + title + '" created! Switch to it in the page bar.');
+        overlay.remove();
+      } catch (e) {
+        toast('Failed: ' + e.message, true);
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Create page';
+      }
+    });
+
+    titleInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') confirmBtn.click();
+      if (e.key === 'Escape') overlay.remove();
+    });
+
+    setTimeout(() => titleInput.focus(), 50);
+  }
+
+  // Load the initial frame after building the page bar
+  function loadInitialFrame() {
+    frame.src = ORIGIN + currentPagePath;
+  }
 
   // ---- messages from the preview ----
   window.addEventListener('message', (ev) => {
     if (ev.origin !== ORIGIN) return;
     const d = ev.data || {};
     if (d.type === 'ploy-blocks-ready') {
+      // The preview page announces what default sections it has
+      if (d.defaultSections) knownDefaultSections = d.defaultSections;
       push();
       if (window.pushStylesPreview) window.pushStylesPreview();
+      renderAll();
     } else if (d.type === 'ploy-blocks-select') {
       selected = { s: d.sectionId, b: d.blockId };
       renderAll();
@@ -1144,9 +1319,39 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
   }
 
   function renderAll() {
-    pageNameEl.textContent = PAGE_NAMES[currentPage] || currentPage;
+    const pg = pagesData.pages.find((p) => p.slug === currentPage);
+    pageNameEl.textContent = pg ? pg.label : currentPage;
+    renderDefaultList();
     renderList();
     renderInspector();
+  }
+
+  function renderDefaultList() {
+    defaultListEl.innerHTML = '';
+    if (!knownDefaultSections.length) {
+      const p = document.createElement('p');
+      p.style.cssText = 'font-size:12px;color:var(--muted);margin:4px 0';
+      p.textContent = 'Loading page sections…';
+      defaultListEl.append(p);
+      return;
+    }
+    knownDefaultSections.forEach((ds) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'default-sec';
+      b.textContent = '📌 ' + ds.label;
+      if (selected.s === ds.id) b.classList.add('active');
+      b.addEventListener('click', () => {
+        selected = { s: ds.id, b: null };
+        renderAll();
+        push();
+        // Scroll the preview to the default section
+        try {
+          frame.contentWindow.postMessage({ type: 'ploy-scroll-to-section', sectionKey: ds.key }, ORIGIN);
+        } catch (e) {}
+      });
+      defaultListEl.append(b);
+    });
   }
 
   function renderList() {
@@ -1169,6 +1374,13 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
   function renderInspector() {
     inspector.innerHTML = '';
     if (!blocksData) return;
+
+    // Check if a default section is selected
+    if (selected.s && selected.s.startsWith('default:')) {
+      renderDefaultInspector();
+      return;
+    }
+
     const sec = findSec(selected.s);
     if (!sec) {
       const p = document.createElement('p');
@@ -1250,6 +1462,56 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
     inspector.append(acts);
   }
 
+  // ---- Default section inspector (visual editing) ----
+  function renderDefaultInspector() {
+    const sKey = selected.s.replace('default:', '');
+    const ds = knownDefaultSections.find((d) => d.key === sKey);
+    if (!ds) return;
+
+    const ov = cur().defaultOverrides[sKey] || {};
+    const upd = () => { markBlocksDirty(); push(); };
+
+    const h = document.createElement('h3');
+    h.textContent = '📌 ' + ds.label;
+    inspector.append(h);
+
+    const hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.textContent = 'Visual overrides for this page section. Edit its content in the Content panels below.';
+    inspector.append(hint);
+
+    // Link to content panel
+    const SECTION_PANEL_MAP = {
+      hero: 'sec-hero',
+      practice: 'sec-practice',
+      projects: 'sec-projects',
+      experience: 'sec-experience',
+      footer: 'sec-footer',
+    };
+    const panelId = SECTION_PANEL_MAP[sKey];
+    if (panelId && document.getElementById(panelId)) {
+      const link = document.createElement('a');
+      link.href = '#' + panelId;
+      link.textContent = '→ Edit ' + ds.label + ' content';
+      link.style.cssText = 'font-size:13px;color:var(--accent);display:block;margin-bottom:14px';
+      inspector.append(link);
+    }
+
+    inspector.append(field('Background color (empty = default)', colorInput(ov.bg || '', (v) => {
+      if (!cur().defaultOverrides[sKey]) cur().defaultOverrides[sKey] = {};
+      cur().defaultOverrides[sKey].bg = v;
+      if (!v) delete cur().defaultOverrides[sKey].bg;
+      upd();
+    })));
+
+    inspector.append(field('Vertical padding (px, empty = default)', numInput(ov.paddingY || '', (v) => {
+      if (!cur().defaultOverrides[sKey]) cur().defaultOverrides[sKey] = {};
+      cur().defaultOverrides[sKey].paddingY = v || 0;
+      if (!v) delete cur().defaultOverrides[sKey].paddingY;
+      upd();
+    }, 0, 400)));
+  }
+
   // ---- save ----
   saveBtn.addEventListener('click', async () => {
     if (!blocksDirty || !blocksData) return;
@@ -1277,16 +1539,31 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
   // ---- init ----
   (async function initBlocks() {
     try {
-      const r = await fetch('/api/blocks', { cache: 'no-store' });
-      blocksData = r.ok ? await r.json() : { pages: {} };
+      const [blocksResp, pagesResp] = await Promise.all([
+        fetch('/api/blocks', { cache: 'no-store' }),
+        fetch('/api/pages', { cache: 'no-store' }),
+      ]);
+      blocksData = blocksResp.ok ? await blocksResp.json() : { pages: {} };
+      if (pagesResp.ok) pagesData = await pagesResp.json();
     } catch (e) {
       blocksData = { pages: {} };
     }
     if (!blocksData.pages) blocksData.pages = {};
+    if (!pagesData.pages || !pagesData.pages.length) {
+      pagesData = {
+        pages: [
+          { slug: 'home', path: '/', label: 'Home', builtin: true },
+          { slug: 'product-wireframes', path: '/work/product-wireframes/', label: 'Wireframes', builtin: true },
+          { slug: 'product-decks', path: '/work/product-decks/', label: 'Decks', builtin: true },
+          { slug: 'visual-systems', path: '/work/visual-systems/', label: 'Visual Systems', builtin: true },
+        ]
+      };
+    }
     statusEl.textContent = 'All changes saved';
     statusEl.className = 'saved';
+    buildPageBar();
+    loadInitialFrame();
     renderAll();
-    push();
   })();
 })();
 </script>

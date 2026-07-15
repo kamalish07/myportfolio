@@ -19,6 +19,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { exec } = require('child_process');
 
 const ROOT = __dirname;
 const WEBSITE_ROOT = path.join(ROOT, '..', 'website');
@@ -28,6 +29,7 @@ const CONTENT_FILE = path.join(WEBSITE_ROOT, 'content', 'site.json');
 const THEME_FILE = path.join(WEBSITE_ROOT, 'content', 'theme.json');
 const BLOCKS_FILE = path.join(WEBSITE_ROOT, 'content', 'blocks.json');
 const STYLES_FILE = path.join(WEBSITE_ROOT, 'content', 'styles.json');
+const PAGES_FILE = path.join(WEBSITE_ROOT, 'content', 'pages.json');
 const BACKUP_DIR = path.join(ROOT, 'backups');
 const UPLOAD_DIR = path.join(WEBSITE_ROOT, 'assets', 'images');
 const WEBSITE_ASSETS_DIR = path.join(WEBSITE_ROOT, 'assets');
@@ -82,6 +84,10 @@ function safeName(name) {
   return String(name).replace(/[^a-zA-Z0-9._-]/g, '-').replace(/^\.+/, '').slice(0, 120) || 'upload';
 }
 
+function safeSlug(name) {
+  return String(name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80) || 'new-page';
+}
+
 function saveJsonWithBackup(file, prefix, data) {
   fs.mkdirSync(BACKUP_DIR, { recursive: true });
   if (fs.existsSync(file)) {
@@ -93,6 +99,114 @@ function saveJsonWithBackup(file, prefix, data) {
   }
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n', 'utf8');
+}
+
+// Automatically commit and push changes to GitHub
+let pushTimeout = null;
+function gitCommitAndPush() {
+  // Debounce pushes to avoid spamming git if many small saves happen quickly
+  if (pushTimeout) clearTimeout(pushTimeout);
+  pushTimeout = setTimeout(() => {
+    console.log('[Git] Committing and pushing changes...');
+    const cmd = 'git add . && git commit -m "CMS Content Update" && git push';
+    exec(cmd, { cwd: path.join(ROOT, '..') }, (error, stdout, stderr) => {
+      if (error) {
+        // It's normal for commit to fail if there are no changes
+        if (!stdout.includes('nothing to commit')) {
+          console.error('[Git] Push error:', error.message);
+        }
+        return;
+      }
+      console.log('[Git] Changes pushed to GitHub successfully.');
+    });
+  }, 2000); // Wait 2 seconds after the last save before pushing
+}
+
+function getPages() {
+  if (fs.existsSync(PAGES_FILE)) {
+    try { return JSON.parse(fs.readFileSync(PAGES_FILE, 'utf8')); } catch (e) {}
+  }
+  // Default pages that already exist as static HTML
+  return {
+    pages: [
+      { slug: 'home', path: '/', label: 'Home', builtin: true },
+      { slug: 'product-wireframes', path: '/work/product-wireframes/', label: 'Wireframes', builtin: true },
+      { slug: 'product-decks', path: '/work/product-decks/', label: 'Decks', builtin: true },
+      { slug: 'visual-systems', path: '/work/visual-systems/', label: 'Visual Systems', builtin: true },
+    ]
+  };
+}
+
+function generatePageHtml(title, slug) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="../../favicon.ico">
+<title>${title} — Kamalish</title>
+<meta name="description" content="${title}">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<script src="../../assets/js/theme-core.js"></script>
+<script src="../../assets/js/theme-apply.js"></script>
+<script src="../../assets/js/render.js" defer></script>
+<script src="../../assets/js/sections.js" defer></script>
+</head>
+<body>
+<div class="project-page min-h-screen bg-ploy-background-primary text-ploy-text-primary">
+
+<header class="nav border-b border-ploy-border-primary bg-ploy-background-primary text-ploy-text-primary">
+  <nav class="nav__container mx-auto flex min-h-18 max-w-7xl items-center justify-between gap-4 px-5 md:px-8" aria-label="Primary navigation">
+    <a class="nav__logo font-heading text-2xl font-semibold tracking-tight md:text-3xl" href="../../" aria-label="Kamalish portfolio home" data-cms="site.nav.logo">Kamalish</a>
+    <div class="nav__actions flex items-center justify-end gap-5">
+      <a class="nav__link text-sm text-ploy-text-primary transition-opacity hover:opacity-55" href="../../#work" data-cms="site.nav.links.0.label" data-cms-href="site.nav.links.0.href">Projects</a>
+      <a class="nav__link hidden text-sm text-ploy-text-primary transition-opacity hover:opacity-55 sm:inline" href="../../#about" data-cms="site.nav.links.1.label" data-cms-href="site.nav.links.1.href">Profile</a>
+    </div>
+  </nav>
+</header>
+
+<main class="project-page__main">
+
+  <section class="project-hero border-b border-ploy-border-primary px-5 py-14 md:px-8 md:py-20" data-default-section="hero" data-default-label="Hero">
+    <div class="project-hero__container mx-auto max-w-7xl">
+      <a class="project-hero__back inline-flex items-center gap-2 text-sm transition-opacity hover:opacity-55" href="../../#work">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left project-hero__back-icon size-4" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>All projects</a>
+      <div class="project-hero__grid mt-12 grid gap-10 md:grid-cols-[1.4fr_0.6fr] md:items-end">
+        <div class="project-hero__copy">
+          <h1 class="project-hero__title mt-4 max-w-4xl font-heading text-balance text-5xl leading-[1.02] tracking-tight md:text-7xl">${title}</h1>
+          <p class="project-hero__summary mt-6 max-w-xl text-lg leading-relaxed text-ploy-text-secondary">Add a description for this page.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<div class="custom-sections" data-page="${slug}"></div>
+</main>
+
+<footer class="footer bg-ploy-background-inverse text-ploy-text-inverse" id="about" data-default-section="footer" data-default-label="Footer">
+  <div class="footer__container mx-auto grid max-w-7xl gap-14 px-5 py-16 md:grid-cols-[1.4fr_1fr] md:px-8 md:py-24">
+    <div class="footer__statement max-w-2xl">
+      <h2 class="footer__title font-heading text-balance text-4xl leading-tight tracking-tight md:text-6xl" data-cms="site.footer.title">Clear thinking deserves a clear form.</h2>
+      <p class="footer__copy mt-6 max-w-lg text-base text-ploy-text-inverse-secondary" data-cms="site.footer.copy">This portfolio is designed to grow with real decks, wireframes, visual systems, and detailed project stories.</p>
+    </div>
+    <div class="footer__meta flex flex-col justify-between gap-10 border-t border-ploy-border-inverse pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+      <div class="footer__links flex flex-col gap-3" data-cms-list="site.footer.links">
+        <template><a class="footer__link text-sm transition-opacity hover:opacity-60" data-f="label" data-f-href="href"></a></template>
+        <a class="footer__link text-sm transition-opacity hover:opacity-60" href="../../#work">Selected work</a>
+        <a class="footer__link text-sm transition-opacity hover:opacity-60" href="../../#experience">Experience</a>
+        <a class="footer__link text-sm transition-opacity hover:opacity-60" href="../../">Home</a>
+      </div>
+      <div class="footer__bottom flex items-center justify-between gap-4">
+        <p class="footer__copyright text-sm text-ploy-text-inverse-secondary">© <span data-cms="site.footer.copyrightYear">2026</span> <span data-cms="site.footer.copyrightName">Kamalish</span></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
+`;
 }
 
 async function handleApi(req, res, pathname) {
@@ -113,6 +227,7 @@ async function handleApi(req, res, pathname) {
       return sendJson(res, 400, { error: 'Content must include "site" and "home" sections' });
     }
     saveJsonWithBackup(CONTENT_FILE, 'site', data);
+    gitCommitAndPush();
     return sendJson(res, 200, { ok: true });
   }
 
@@ -133,6 +248,7 @@ async function handleApi(req, res, pathname) {
       return sendJson(res, 400, { error: 'Theme must include "colors" and "fonts" sections' });
     }
     saveJsonWithBackup(THEME_FILE, 'theme', theme);
+    gitCommitAndPush();
     return sendJson(res, 200, { ok: true });
   }
 
@@ -153,6 +269,7 @@ async function handleApi(req, res, pathname) {
       return sendJson(res, 400, { error: 'Blocks must include a "pages" object' });
     }
     saveJsonWithBackup(BLOCKS_FILE, 'blocks', blocks);
+    gitCommitAndPush();
     return sendJson(res, 200, { ok: true });
   }
 
@@ -173,6 +290,7 @@ async function handleApi(req, res, pathname) {
       return sendJson(res, 400, { error: 'Styles must include an "overrides" object' });
     }
     saveJsonWithBackup(STYLES_FILE, 'styles', styles);
+    gitCommitAndPush();
     return sendJson(res, 200, { ok: true });
   }
 
@@ -200,7 +318,87 @@ async function handleApi(req, res, pathname) {
       i += 1;
     }
     fs.writeFileSync(target, Buffer.from(dataBase64, 'base64'));
+    gitCommitAndPush();
     return sendJson(res, 200, { ok: true, path: '/assets/images/' + file });
+  }
+
+  // ---- Pages API ----
+  if (pathname === '/api/pages' && req.method === 'GET') {
+    return sendJson(res, 200, getPages());
+  }
+
+  if (pathname === '/api/pages' && req.method === 'POST') {
+    const body = await readBody(req);
+    let payload;
+    try {
+      payload = JSON.parse(body.toString('utf8'));
+    } catch (e) {
+      return sendJson(res, 400, { error: 'Invalid JSON' });
+    }
+    const { title } = payload || {};
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      return sendJson(res, 400, { error: 'title is required' });
+    }
+    const slug = safeSlug(title);
+    const pagePath = '/work/' + slug + '/';
+    const pageDir = path.join(WEBSITE_ROOT, 'work', slug);
+
+    // Check if page already exists
+    if (fs.existsSync(pageDir)) {
+      return sendJson(res, 400, { error: 'A page with slug "' + slug + '" already exists' });
+    }
+
+    // Create the page directory and HTML
+    fs.mkdirSync(pageDir, { recursive: true });
+    fs.writeFileSync(path.join(pageDir, 'index.html'), generatePageHtml(title, slug), 'utf8');
+
+    // Register in pages.json
+    const pagesData = getPages();
+    pagesData.pages.push({ slug, path: pagePath, label: title, builtin: false });
+    saveJsonWithBackup(PAGES_FILE, 'pages', pagesData);
+
+    // Initialize an empty entry in blocks.json
+    let blocksData = { pages: {} };
+    if (fs.existsSync(BLOCKS_FILE)) {
+      try { blocksData = JSON.parse(fs.readFileSync(BLOCKS_FILE, 'utf8')); } catch (e) {}
+    }
+    if (!blocksData.pages[slug]) {
+      blocksData.pages[slug] = { sections: [] };
+      saveJsonWithBackup(BLOCKS_FILE, 'blocks', blocksData);
+    }
+
+    gitCommitAndPush();
+    return sendJson(res, 200, { ok: true, slug, path: pagePath, label: title });
+  }
+
+  if (pathname === '/api/pages' && req.method === 'DELETE') {
+    const body = await readBody(req);
+    let payload;
+    try {
+      payload = JSON.parse(body.toString('utf8'));
+    } catch (e) {
+      return sendJson(res, 400, { error: 'Invalid JSON' });
+    }
+    const { slug } = payload || {};
+    if (!slug) return sendJson(res, 400, { error: 'slug is required' });
+
+    const pagesData = getPages();
+    const pageEntry = pagesData.pages.find((p) => p.slug === slug);
+    if (!pageEntry) return sendJson(res, 404, { error: 'Page not found' });
+    if (pageEntry.builtin) return sendJson(res, 400, { error: 'Cannot delete a built-in page' });
+
+    // Remove page directory
+    const pageDir = path.join(WEBSITE_ROOT, 'work', slug);
+    if (fs.existsSync(pageDir)) {
+      fs.rmSync(pageDir, { recursive: true, force: true });
+    }
+
+    // Remove from pages.json
+    pagesData.pages = pagesData.pages.filter((p) => p.slug !== slug);
+    saveJsonWithBackup(PAGES_FILE, 'pages', pagesData);
+
+    gitCommitAndPush();
+    return sendJson(res, 200, { ok: true });
   }
 
   return sendJson(res, 404, { error: 'Not found' });

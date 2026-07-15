@@ -8,9 +8,9 @@
  * everything stays aligned.
  *
  * Editing protocol (postMessage; allowed origins come from theme-apply.js):
- *   CMS → page: { type:'ploy-blocks-preview', sections, editMode, selected }
+ *   CMS → page: { type:'ploy-blocks-preview', sections, editMode, selected, defaultOverrides }
  *               { type:'ploy-styles-preview', overrides }
- *   page → CMS: { type:'ploy-blocks-ready', page }
+ *   page → CMS: { type:'ploy-blocks-ready', page, defaultSections }
  *               { type:'ploy-blocks-select', sectionId, blockId }
  *               { type:'ploy-blocks-text', sectionId, blockId, text }
  *               { type:'ploy-blocks-resize', sectionId, blockId, width }
@@ -23,10 +23,11 @@
   var framed = window.parent && window.parent !== window;
   var ORIGINS = window.PLOY_CMS_ORIGINS || [];
 
-  var state = { sections: [], editMode: false, selected: { s: null, b: null } };
+  var state = { sections: [], editMode: false, selected: { s: null, b: null }, defaultOverrides: {} };
   var focusBlockId = null;
   var styledEls = [];
   var pendingOverrides = null;
+  var defaultSectionEls = []; // track annotated default section elements
 
   var TAGS = {
     h1: { size: 48, weight: 600, heading: true },
@@ -54,6 +55,11 @@
     '.ploy-empty{border:2px dashed #b9b2a6;border-radius:8px;margin:28px auto;max-width:900px;padding:44px 20px;text-align:center;color:#8a8375;font:14px/1.5 system-ui,sans-serif}',
     '.ploy-imgph{border:2px dashed #999;border-radius:6px;min-height:140px;display:flex;align-items:center;justify-content:center;color:#777;font:13px system-ui,sans-serif;background:rgba(0,0,0,.04);padding:12px;text-align:center}',
     '.ploy-blk__text:focus{outline:none}',
+    /* Default section edit-mode styles */
+    '.ploy-defsec--edit{position:relative;cursor:pointer;transition:outline .15s}',
+    '.ploy-defsec--edit:hover{outline:2px dashed rgba(124,58,237,.4);outline-offset:-2px}',
+    '.ploy-defsec--selected{outline:2px solid #7c3aed!important;outline-offset:-2px}',
+    '.ploy-defsec-label{position:absolute;top:6px;left:6px;z-index:70;background:rgba(124,58,237,.88);color:#fff;font:600 11px/1.4 system-ui,sans-serif;padding:3px 10px;border-radius:3px;pointer-events:none;letter-spacing:.3px}',
   ].join('\n');
   document.head.appendChild(styleEl);
 
@@ -70,6 +76,92 @@
     return '0 1 calc(' + w + '% - ' + reduce.toFixed(2) + 'px)';
   }
 
+  // ---------------- default section detection & editing ----------------
+  function getDefaultSections() {
+    var els = document.querySelectorAll('[data-default-section]');
+    var result = [];
+    for (var i = 0; i < els.length; i++) {
+      result.push({
+        id: 'default:' + els[i].dataset.defaultSection,
+        key: els[i].dataset.defaultSection,
+        label: els[i].dataset.defaultLabel || els[i].dataset.defaultSection,
+        el: els[i],
+      });
+    }
+    return result;
+  }
+
+  function applyDefaultOverrides(overrides) {
+    var secs = getDefaultSections();
+    secs.forEach(function (sec) {
+      var ov = (overrides || {})[sec.key];
+      if (!ov) return;
+      if (ov.bg) sec.el.style.backgroundColor = ov.bg;
+      if (ov.paddingY != null && ov.paddingY !== '') {
+        sec.el.style.paddingTop = ov.paddingY + 'px';
+        sec.el.style.paddingBottom = ov.paddingY + 'px';
+      }
+    });
+  }
+
+  function annotateDefaultSections() {
+    // Clear previous annotations
+    cleanupDefaultAnnotations();
+
+    var secs = getDefaultSections();
+    defaultSectionEls = [];
+
+    secs.forEach(function (sec) {
+      if (state.editMode) {
+        sec.el.classList.add('ploy-defsec--edit');
+        defaultSectionEls.push(sec.el);
+
+        // Label overlay
+        var label = document.createElement('div');
+        label.className = 'ploy-defsec-label';
+        label.textContent = '📌 ' + sec.label;
+        label.dataset.ployAnnotation = 'true';
+        sec.el.appendChild(label);
+
+        // Selection state
+        if (state.selected.s === sec.id) {
+          sec.el.classList.add('ploy-defsec--selected');
+        }
+
+        // Click handler
+        sec.el._ployClickHandler = function (ev) {
+          // Don't intercept if clicking a link or inside custom-sections
+          if (ev.target.closest && (ev.target.closest('a') || ev.target.closest('.custom-sections'))) return;
+          ev.stopPropagation();
+          if (state.selected.s === sec.id && !state.selected.b) return;
+          state.selected = { s: sec.id, b: null };
+          annotateDefaultSections();
+          post({ type: 'ploy-blocks-select', sectionId: sec.id, blockId: null });
+        };
+        sec.el.addEventListener('click', sec.el._ployClickHandler);
+      }
+    });
+
+    // Apply visual overrides
+    applyDefaultOverrides(state.defaultOverrides);
+  }
+
+  function cleanupDefaultAnnotations() {
+    // Remove all annotation labels
+    var labels = document.querySelectorAll('[data-ploy-annotation]');
+    for (var i = 0; i < labels.length; i++) labels[i].remove();
+
+    // Remove edit classes and click handlers
+    defaultSectionEls.forEach(function (el) {
+      el.classList.remove('ploy-defsec--edit', 'ploy-defsec--selected');
+      if (el._ployClickHandler) {
+        el.removeEventListener('click', el._ployClickHandler);
+        delete el._ployClickHandler;
+      }
+    });
+    defaultSectionEls = [];
+  }
+
   // ---------------- rendering ----------------
   function renderSections() {
     if (!container) return;
@@ -79,7 +171,7 @@
       if (state.editMode) {
         var ph = document.createElement('div');
         ph.className = 'ploy-empty';
-        ph.textContent = 'No custom sections on this page yet — use “Add section” in the CMS panel.';
+        ph.textContent = 'No custom sections on this page yet — use "Add section" in the CMS panel.';
         container.appendChild(ph);
       }
       return;
@@ -119,6 +211,9 @@
       }
       focusBlockId = null;
     }
+
+    // Re-annotate default sections after rendering custom sections
+    annotateDefaultSections();
   }
 
   function renderBlock(sec, b) {
@@ -287,6 +382,9 @@
   document.addEventListener('click', function (ev) {
     if (!state.editMode || !container) return;
     if (container.contains(ev.target)) return;
+    // Don't deselect if clicking inside a default section
+    var defaultEl = ev.target.closest && ev.target.closest('[data-default-section]');
+    if (defaultEl) return;
     if (state.selected.s || state.selected.b) select(null, null);
   });
 
@@ -341,9 +439,14 @@
       state.sections = d.sections || [];
       state.editMode = !!d.editMode;
       state.selected = d.selected || { s: null, b: null };
+      state.defaultOverrides = d.defaultOverrides || {};
       renderSections();
     } else if (d.type === 'ploy-styles-preview') {
       applyOverrides(d.overrides || {});
+    } else if (d.type === 'ploy-scroll-to-section') {
+      // CMS asks us to scroll a default section into view
+      var target = document.querySelector('[data-default-section="' + d.sectionKey + '"]');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   });
 
@@ -357,9 +460,16 @@
     var styles = res[1];
     if (blocks && blocks.pages && PAGE && blocks.pages[PAGE]) {
       state.sections = blocks.pages[PAGE].sections || [];
+      // Also load default overrides for this page
+      if (blocks.pages[PAGE].defaultOverrides) {
+        state.defaultOverrides = blocks.pages[PAGE].defaultOverrides;
+      }
       renderSections();
     }
     if (styles && styles.overrides && Object.keys(styles.overrides).length) applyOverrides(styles.overrides);
-    post({ type: 'ploy-blocks-ready', page: PAGE });
+
+    // Collect default section info to send to CMS
+    var defSecs = getDefaultSections().map(function (s) { return { id: s.id, key: s.key, label: s.label }; });
+    post({ type: 'ploy-blocks-ready', page: PAGE, defaultSections: defSecs });
   });
 })();
