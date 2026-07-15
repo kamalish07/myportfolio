@@ -23,11 +23,12 @@
   var framed = window.parent && window.parent !== window;
   var ORIGINS = window.PLOY_CMS_ORIGINS || [];
 
-  var state = { sections: [], editMode: false, selected: { s: null, b: null }, defaultOverrides: {} };
+  var state = { sections: [], editMode: false, selected: { s: null, b: null }, defaultOverrides: {}, migrated: false };
   var focusBlockId = null;
   var styledEls = [];
   var pendingOverrides = null;
   var defaultSectionEls = []; // track annotated default section elements
+  var extractedDefaultNodes = {};
 
   var TAGS = {
     h1: { size: 48, weight: 600, heading: true },
@@ -60,6 +61,9 @@
     '.ploy-defsec--edit:hover{outline:2px dashed rgba(124,58,237,.4);outline-offset:-2px}',
     '.ploy-defsec--selected{outline:2px solid #7c3aed!important;outline-offset:-2px}',
     '.ploy-defsec-label{position:absolute;top:6px;left:6px;z-index:70;background:rgba(124,58,237,.88);color:#fff;font:600 11px/1.4 system-ui,sans-serif;padding:3px 10px;border-radius:3px;pointer-events:none;letter-spacing:.3px}',
+    /* Link styling */
+    '.ploy-blk__text a{color:var(--ploy-accent-primary, #2563eb);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}',
+    '.ploy-blk__text a:hover{border-color:currentColor}',
   ].join('\n');
   document.head.appendChild(styleEl);
 
@@ -78,17 +82,22 @@
 
   // ---------------- default section detection & editing ----------------
   function getDefaultSections() {
-    var els = document.querySelectorAll('[data-default-section]');
-    var result = [];
-    for (var i = 0; i < els.length; i++) {
-      result.push({
-        id: 'default:' + els[i].dataset.defaultSection,
-        key: els[i].dataset.defaultSection,
-        label: els[i].dataset.defaultLabel || els[i].dataset.defaultSection,
-        el: els[i],
-      });
-    }
-    return result;
+    return Array.prototype.slice.call(document.querySelectorAll('[data-default-section]')).map(function (el) {
+      return {
+        id: 'default:' + el.dataset.defaultSection,
+        key: el.dataset.defaultSection,
+        label: el.dataset.defaultLabel || el.dataset.defaultSection,
+        el: el
+      };
+    }).concat(Object.keys(extractedDefaultNodes).map(function(k) {
+      var el = extractedDefaultNodes[k];
+      return {
+        id: 'default:' + k,
+        key: k,
+        label: el.dataset.defaultLabel || k,
+        el: el
+      };
+    }));
   }
 
   function applyDefaultOverrides(overrides) {
@@ -165,18 +174,46 @@
   // ---------------- rendering ----------------
   function renderSections() {
     if (!container) return;
+    
+    // Extract default sections if the page is migrated, so we can reorder them
+    if (state.migrated && Object.keys(extractedDefaultNodes).length === 0) {
+      document.querySelectorAll('[data-default-section]').forEach(function (el) {
+        extractedDefaultNodes[el.dataset.defaultSection] = el;
+        if (el.parentNode) el.parentNode.removeChild(el);
+      });
+    }
+
     container.innerHTML = '';
     container.classList.toggle('custom-sections--edit', state.editMode);
-    if (!state.sections.length) {
+    
+    if (!state.sections.length && state.migrated) {
       if (state.editMode) {
         var ph = document.createElement('div');
         ph.className = 'ploy-empty';
-        ph.textContent = 'No custom sections on this page yet — use "Add section" in the CMS panel.';
+        ph.textContent = 'No sections on this page yet — use "Add custom section" in the CMS panel.';
         container.appendChild(ph);
       }
       return;
     }
+    
+    // If not migrated, we just append custom sections into container and leave default sections alone in the DOM.
+    // If migrated, ALL sections are in state.sections and will be rendered here.
     state.sections.forEach(function (sec) {
+      if (sec.type === 'default_section') {
+        var el = extractedDefaultNodes[sec.key];
+        if (el) {
+          if (sec.bg) {
+             el.style.setProperty('background-color', sec.bg, 'important');
+             el.classList.remove('bg-ploy-background-primary', 'bg-ploy-background-inverse', 'bg-ploy-background-secondary');
+          }
+          if (sec.paddingY != null) el.style.padding = sec.paddingY + 'px 0';
+          
+          if (state.editMode) attachSectionEditing(el, sec);
+          container.appendChild(el);
+        }
+        return;
+      }
+
       var secEl = document.createElement('section');
       secEl.className = 'ploy-sec';
       secEl.dataset.sid = sec.id;
@@ -212,7 +249,7 @@
       focusBlockId = null;
     }
 
-    // Re-annotate default sections after rendering custom sections
+    // Re-annotate default sections after rendering
     annotateDefaultSections();
   }
 
@@ -224,7 +261,32 @@
     wrap.style.flex = blockFlex(b, gap);
     wrap.style.minWidth = '60px';
     wrap.style.position = 'relative';
-    if (b.type === 'image') {
+    if (b.type === 'container') {
+      wrap.style.display = 'flex';
+      wrap.style.flexDirection = b.flexDirection || 'column';
+      wrap.style.gap = (b.gap != null ? b.gap : 16) + 'px';
+      wrap.style.alignItems = b.alignItems || 'stretch';
+      wrap.style.justifyContent = b.justifyContent || 'flex-start';
+      if (b.padding) wrap.style.padding = b.padding + 'px';
+      if (b.bg) wrap.style.backgroundColor = b.bg;
+      if (b.radius) wrap.style.borderRadius = b.radius + 'px';
+      (b.blocks || []).forEach(function (child) { wrap.appendChild(renderBlock(sec, child)); });
+      if (state.editMode && !(b.blocks && b.blocks.length)) {
+         var ph = document.createElement('div');
+         ph.className = 'ploy-empty';
+         ph.textContent = 'Empty container';
+         ph.style.padding = '20px';
+         ph.style.border = '1px dashed #ccc';
+         wrap.appendChild(ph);
+      }
+    } else if (b.type === 'button') {
+      var btn = document.createElement('a');
+      btn.className = 'button-link typography-button inline-flex items-center justify-center rounded-button border px-5 py-3 text-sm transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 button-link--primary border-ploy-button-primary-border bg-ploy-button-primary-background text-ploy-button-primary-text hover:opacity-80';
+      btn.textContent = b.text || 'Button';
+      btn.href = b.url || '#';
+      if (state.editMode) btn.addEventListener('click', function(e) { e.preventDefault(); });
+      wrap.appendChild(btn);
+    } else if (b.type === 'image') {
       if (b.src) {
         var img = document.createElement('img');
         img.src = window.PloyTheme ? window.PloyTheme.url(b.src) : b.src;
@@ -243,7 +305,15 @@
       var d = TAGS[b.tag] || TAGS.p;
       var el = document.createElement(TAGS[b.tag] ? b.tag : 'p');
       el.className = 'ploy-blk__text';
-      el.textContent = b.text || '';
+      if (!state.editMode && b.text) {
+        // Parse simple markdown links: [text](url)
+        var html = b.text
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') // escape
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+        el.innerHTML = html;
+      } else {
+        el.textContent = b.text || '';
+      }
       el.style.margin = '0';
       el.style.whiteSpace = 'pre-wrap';
       el.style.fontSize = (b.size || d.size) + 'px';
@@ -295,6 +365,21 @@
   }
 
   function attachSectionEditing(secEl, sec) {
+    if (sec.type === 'default_section') {
+      // Add overlay to block interactions with links/buttons
+      var existing = secEl.querySelector('.ploy-sec-overlay');
+      if (!existing) {
+        var over = document.createElement('div');
+        over.className = 'ploy-sec-overlay';
+        over.style.position = 'absolute';
+        over.style.inset = '0';
+        over.style.zIndex = '50';
+        over.style.cursor = 'pointer';
+        secEl.style.position = 'relative'; // Ensure overlay is contained
+        secEl.appendChild(over);
+      }
+    }
+
     secEl.addEventListener('click', function (ev) {
       ev.stopPropagation();
       if (state.selected.s === sec.id && !state.selected.b) return;
@@ -305,27 +390,38 @@
 
     var bar = document.createElement('div');
     bar.className = 'ploy-toolbar ploy-toolbar--sec';
-    bar.append(
-      toolbarButton('↑', 'Move section up', function () { post({ type: 'ploy-blocks-op', op: 'moveSection', sectionId: sec.id, dir: -1 }); }),
-      toolbarButton('↓', 'Move section down', function () { post({ type: 'ploy-blocks-op', op: 'moveSection', sectionId: sec.id, dir: 1 }); }),
-      toolbarButton('+ Text', 'Add a text block', function () { post({ type: 'ploy-blocks-op', op: 'addBlock', sectionId: sec.id, blockType: 'text' }); }),
-      toolbarButton('+ Image', 'Add an image block', function () { post({ type: 'ploy-blocks-op', op: 'addBlock', sectionId: sec.id, blockType: 'image' }); }),
-      toolbarButton('✕', 'Delete section', function () { post({ type: 'ploy-blocks-op', op: 'deleteSection', sectionId: sec.id }); }),
-    );
+    
+    if (sec.type === 'default_section') {
+      bar.append(
+        toolbarButton('↑', 'Move section up', function () { post({ type: 'ploy-blocks-op', op: 'moveSection', sectionId: sec.id, dir: -1 }); }),
+        toolbarButton('↓', 'Move section down', function () { post({ type: 'ploy-blocks-op', op: 'moveSection', sectionId: sec.id, dir: 1 }); }),
+        toolbarButton('✕', 'Delete section', function () { post({ type: 'ploy-blocks-op', op: 'deleteSection', sectionId: sec.id }); })
+      );
+    } else {
+      bar.append(
+        toolbarButton('↑', 'Move section up', function () { post({ type: 'ploy-blocks-op', op: 'moveSection', sectionId: sec.id, dir: -1 }); }),
+        toolbarButton('↓', 'Move section down', function () { post({ type: 'ploy-blocks-op', op: 'moveSection', sectionId: sec.id, dir: 1 }); }),
+        toolbarButton('+ Text', 'Add a text block', function () { post({ type: 'ploy-blocks-op', op: 'addBlock', sectionId: sec.id, blockType: 'text' }); }),
+        toolbarButton('+ Image', 'Add an image block', function () { post({ type: 'ploy-blocks-op', op: 'addBlock', sectionId: sec.id, blockType: 'image' }); }),
+        toolbarButton('✕', 'Delete section', function () { post({ type: 'ploy-blocks-op', op: 'deleteSection', sectionId: sec.id }); })
+      );
+    }
     secEl.appendChild(bar);
 
-    var handle = document.createElement('div');
-    handle.className = 'ploy-handle ploy-handle--bottom';
-    handle.title = 'Drag to set section height';
-    var startH = 0;
-    handle.addEventListener('pointerdown', function () { startH = secEl.getBoundingClientRect().height; });
-    dragHandle(handle, function (dx, dy) {
-      sec.minHeight = Math.max(0, Math.round(startH + dy));
-      secEl.style.minHeight = sec.minHeight + 'px';
-    }, function () {
-      post({ type: 'ploy-blocks-section-resize', sectionId: sec.id, minHeight: sec.minHeight });
-    });
-    secEl.appendChild(handle);
+    if (sec.type !== 'default_section') {
+      var handle = document.createElement('div');
+      handle.className = 'ploy-handle ploy-handle--bottom';
+      handle.title = 'Drag to set section height';
+      var startH = 0;
+      handle.addEventListener('pointerdown', function () { startH = secEl.getBoundingClientRect().height; });
+      dragHandle(handle, function (dx, dy) {
+        sec.minHeight = Math.max(0, Math.round(startH + dy));
+        secEl.style.minHeight = sec.minHeight + 'px';
+      }, function () {
+        post({ type: 'ploy-blocks-section-resize', sectionId: sec.id, minHeight: sec.minHeight });
+      });
+      secEl.appendChild(handle);
+    }
   }
 
   function attachBlockEditing(wrap, sec, b) {
@@ -460,6 +556,7 @@
     var styles = res[1];
     if (blocks && blocks.pages && PAGE && blocks.pages[PAGE]) {
       state.sections = blocks.pages[PAGE].sections || [];
+      state.migrated = !!blocks.pages[PAGE].migrated;
       // Also load default overrides for this page
       if (blocks.pages[PAGE].defaultOverrides) {
         state.defaultOverrides = blocks.pages[PAGE].defaultOverrides;

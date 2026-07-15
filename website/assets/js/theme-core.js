@@ -94,6 +94,23 @@
       var v = vars[k];
       if (v) root.style.setProperty(k, v);
     });
+    
+    // Apply global background, header, and footer color overrides
+    var c = theme.colors || {};
+    var styleId = 'ploy-theme-overrides';
+    var style = doc.getElementById(styleId);
+    if (!style) {
+      style = doc.createElement('style');
+      style.id = styleId;
+      doc.head.appendChild(style);
+    }
+    var bg = c.bg || c.background || '';
+    var hBg = c.headerBg || c.ink || '';
+    var fBg = c.footerBg || c.ink || '';
+    style.textContent = '';
+    if (bg) style.textContent += 'body, .home-page, .bg-ploy-background-primary { background-color: ' + bg + ' !important; }\n';
+    if (hBg) style.textContent += 'header.nav { background-color: ' + hBg + ' !important; }\n';
+    if (fBg) style.textContent += 'footer.footer { background-color: ' + fBg + ' !important; }\n';
   }
 
   global.PloyTheme = {

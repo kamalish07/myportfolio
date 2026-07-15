@@ -201,10 +201,7 @@
       <div id="tab-sections" style="display:none">
         <h2>Sections — <span id="sectionsPageName">Home</span></h2>
         <p class="hint">Click a section in the preview or sidebar to select and edit it. Default sections (marked with 📌) support visual editing — background color and padding. Custom sections at the bottom can be freely added and composed.</p>
-        <div class="sec-divider">Page Sections</div>
-        <div id="defaultSectionsList"></div>
-        <div class="sec-divider" style="margin-top:12px">Custom Sections</div>
-        <div id="sectionsList"></div>
+        <div id="secList"></div>
         <button id="addSectionBtn" class="addbtn" type="button">+ Add custom section</button>
         <div id="blocksInspector"></div>
         <div class="appearance__actions">
@@ -807,7 +804,7 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
 /* ==================== APPEARANCE / THEME ==================== */
 (function () {
   const DEFAULT_THEME = {
-    colors: { background: '#f4f1ec', surface: '#e9e6e0', ink: '#090706', onDark: '#ffffff', accent: '#89221c' },
+    colors: { background: '#f4f1ec', surface: '#e9e6e0', ink: '#090706', onDark: '#ffffff', accent: '#89221c', bg: '#f5f1ea', headerBg: '#171412', footerBg: '#171412' },
     fonts: { headingPreset: 'playfair', headingCustom: '', bodyPreset: 'inter', bodyCustom: '' },
   };
   const HEX_RE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
@@ -835,11 +832,20 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
     } catch (e) {}
   }
 
-  function colorRow(label, key) {
+  function colorRow(label, key, hint) {
     const wrap = document.createElement('div');
     wrap.className = 'colorfield';
     const l = document.createElement('label');
     l.textContent = label;
+    if (hint) {
+      const p = document.createElement('p');
+      p.className = 'hint';
+      p.style.cssText = 'margin:0 0 6px;font-size:12px';
+      p.textContent = hint;
+      wrap.append(l, p);
+    } else {
+      wrap.append(l);
+    }
     const row = document.createElement('div');
     row.className = 'colorfield__row';
     const swatch = document.createElement('input');
@@ -857,7 +863,7 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
     swatch.addEventListener('input', () => { hex.value = swatch.value; commit(swatch.value); });
     hex.addEventListener('input', () => commit(hex.value));
     row.append(swatch, hex);
-    wrap.append(l, row);
+    wrap.append(row);
     return wrap;
   }
 
@@ -902,6 +908,9 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
       colorRow('Ink — headings, body text, dark sections', 'ink'),
       colorRow('Text on dark sections', 'onDark'),
       colorRow('Accent', 'accent'),
+      colorRow('Global Background', 'bg', 'Overall page background color.'),
+      colorRow('Header Background', 'headerBg'),
+      colorRow('Footer Background', 'footerBg'),
       fontRow('Heading font', 'headingPreset', 'headingCustom'),
       fontRow('Body font', 'bodyPreset', 'bodyCustom'),
     );
@@ -990,8 +999,7 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
 
   const statusEl = document.getElementById('blocksStatus');
   const saveBtn = document.getElementById('blocksSaveBtn');
-  const listEl = document.getElementById('sectionsList');
-  const defaultListEl = document.getElementById('defaultSectionsList');
+  const listEl = document.getElementById('secList');
   const inspector = document.getElementById('blocksInspector');
   const pageNameEl = document.getElementById('sectionsPageName');
   const pageBar = document.getElementById('pageBar');
@@ -1031,6 +1039,12 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
   }
   function newImageBlock() {
     return { id: uid('b'), type: 'image', src: '', alt: '', width: 48, radius: 0 };
+  }
+  function newContainerBlock() {
+    return { id: uid('b'), type: 'container', width: 100, flexDirection: 'column', gap: 16, alignItems: 'stretch', justifyContent: 'flex-start', padding: 0, bg: '', radius: 0, blocks: [newTextBlock()] };
+  }
+  function newButtonBlock() {
+    return { id: uid('b'), type: 'button', text: 'Button', url: '#', width: 100 };
   }
   function newSection() {
     return { id: uid('s'), bg: '', paddingY: 64, gap: 24, maxWidth: 1152, minHeight: 0, align: 'start', blocks: [newTextBlock()] };
@@ -1155,7 +1169,23 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
     const d = ev.data || {};
     if (d.type === 'ploy-blocks-ready') {
       // The preview page announces what default sections it has
-      if (d.defaultSections) knownDefaultSections = d.defaultSections;
+      if (d.defaultSections) {
+        knownDefaultSections = d.defaultSections;
+        if (!cur().migrated) {
+          cur().migrated = true;
+          // If there are custom sections already (from previous non-migrated CMS usage),
+          // they would normally just sit in the middle. For simplicity, we just append them.
+          // The best approach is: if we have existing custom sections, we don't know where to put them, 
+          // so we'll just put the defaults first.
+          const oldSecs = cur().sections.slice();
+          cur().sections = [];
+          knownDefaultSections.forEach((ds) => {
+            cur().sections.push({ id: ds.id, type: 'default_section', key: ds.key });
+          });
+          cur().sections.push(...oldSecs);
+          markBlocksDirty();
+        }
+      }
       push();
       if (window.pushStylesPreview) window.pushStylesPreview();
       renderAll();
@@ -1202,7 +1232,12 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
       secs.splice(si, 1);
       selected = { s: null, b: null };
     } else if (d.op === 'addBlock') {
-      const blk = d.blockType === 'image' ? newImageBlock() : newTextBlock();
+      let blk;
+      if (d.blockType === 'image') blk = newImageBlock();
+      else if (d.blockType === 'button') blk = newButtonBlock();
+      else if (d.blockType === 'container') blk = newContainerBlock();
+      else blk = newTextBlock();
+      sec.blocks = sec.blocks || [];
       sec.blocks.push(blk);
       selected = { s: sec.id, b: blk.id };
     } else if (d.op === 'moveBlock' || d.op === 'deleteBlock') {
@@ -1321,37 +1356,8 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
   function renderAll() {
     const pg = pagesData.pages.find((p) => p.slug === currentPage);
     pageNameEl.textContent = pg ? pg.label : currentPage;
-    renderDefaultList();
     renderList();
     renderInspector();
-  }
-
-  function renderDefaultList() {
-    defaultListEl.innerHTML = '';
-    if (!knownDefaultSections.length) {
-      const p = document.createElement('p');
-      p.style.cssText = 'font-size:12px;color:var(--muted);margin:4px 0';
-      p.textContent = 'Loading page sections…';
-      defaultListEl.append(p);
-      return;
-    }
-    knownDefaultSections.forEach((ds) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'default-sec';
-      b.textContent = '📌 ' + ds.label;
-      if (selected.s === ds.id) b.classList.add('active');
-      b.addEventListener('click', () => {
-        selected = { s: ds.id, b: null };
-        renderAll();
-        push();
-        // Scroll the preview to the default section
-        try {
-          frame.contentWindow.postMessage({ type: 'ploy-scroll-to-section', sectionKey: ds.key }, ORIGIN);
-        } catch (e) {}
-      });
-      defaultListEl.append(b);
-    });
   }
 
   function renderList() {
@@ -1360,12 +1366,24 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
     cur().sections.forEach((sec, i) => {
       const b = document.createElement('button');
       b.type = 'button';
-      b.textContent = 'Section ' + (i + 1) + ' — ' + (sec.blocks || []).length + ' block' + ((sec.blocks || []).length === 1 ? '' : 's');
+      if (sec.type === 'default_section') {
+        const dInfo = knownDefaultSections.find(x => x.id === sec.id);
+        b.textContent = '📌 ' + (dInfo ? dInfo.label : sec.key || 'Default section');
+        b.className = 'default-sec';
+      } else {
+        b.textContent = 'Section ' + (i + 1) + ' — ' + (sec.blocks || []).length + ' block' + ((sec.blocks || []).length === 1 ? '' : 's');
+      }
       if (selected.s === sec.id) b.classList.add('active');
       b.addEventListener('click', () => {
         selected = { s: sec.id, b: null };
         renderAll();
         push();
+        // Scroll the preview to the default section if it is one
+        if (sec.type === 'default_section') {
+          try {
+            frame.contentWindow.postMessage({ type: 'ploy-scroll-to-section', sectionKey: sec.key }, ORIGIN);
+          } catch (e) {}
+        }
       });
       listEl.append(b);
     });
@@ -1375,20 +1393,35 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
     inspector.innerHTML = '';
     if (!blocksData) return;
 
-    // Check if a default section is selected
-    if (selected.s && selected.s.startsWith('default:')) {
-      renderDefaultInspector();
-      return;
-    }
-
     const sec = findSec(selected.s);
     if (!sec) {
       const p = document.createElement('p');
       p.className = 'hint';
       p.textContent = cur().sections.length
         ? 'Click a section or block in the preview (or a section above) to edit it.'
-        : 'This page has no custom sections yet.';
+        : 'This page has no sections yet.';
       inspector.append(p);
+      return;
+    }
+    
+    // Default sections have limited editing in this iteration (mostly styling/moving)
+    if (sec.type === 'default_section') {
+      const h = document.createElement('h3');
+      h.textContent = 'Default Section';
+      inspector.append(h);
+      
+      const upd = () => { markBlocksDirty(); push(); };
+      
+      // We can still allow them to edit background/padding if they want!
+      // But for simplicity, we'll just allow them to move/delete it.
+      const acts = document.createElement('div');
+      acts.className = 'insp-actions';
+      acts.append(
+        actionBtn('↑ Move up', () => handleOp({ op: 'moveSection', sectionId: sec.id, dir: -1 })),
+        actionBtn('↓ Move down', () => handleOp({ op: 'moveSection', sectionId: sec.id, dir: 1 })),
+        actionBtn('✕ Delete section', () => handleOp({ op: 'deleteSection', sectionId: sec.id })),
+      );
+      inspector.append(acts);
       return;
     }
     const blk = findBlk(sec, selected.b);
@@ -1413,6 +1446,7 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
       acts.append(
         actionBtn('+ Text block', () => handleOp({ op: 'addBlock', sectionId: sec.id, blockType: 'text' })),
         actionBtn('+ Image block', () => handleOp({ op: 'addBlock', sectionId: sec.id, blockType: 'image' })),
+        actionBtn('+ Button', () => handleOp({ op: 'addBlock', sectionId: sec.id, blockType: 'button' })),
         actionBtn('↑ Move up', () => handleOp({ op: 'moveSection', sectionId: sec.id, dir: -1 })),
         actionBtn('↓ Move down', () => handleOp({ op: 'moveSection', sectionId: sec.id, dir: 1 })),
         actionBtn('✕ Delete section', () => handleOp({ op: 'deleteSection', sectionId: sec.id })),
@@ -1422,17 +1456,22 @@ window.addEventListener('beforeunload', (e) => { if (dirty) e.preventDefault(); 
     }
 
     const h = document.createElement('h3');
-    h.textContent = blk.type === 'image' ? 'Image block' : 'Text block';
+    h.textContent = blk.type === 'image' ? 'Image block' : blk.type === 'button' ? 'Button block' : 'Text block';
     inspector.append(h);
 
     if (blk.type === 'image') {
       inspector.append(field('Image', imageControl(blk.src, (v) => { blk.src = v; upd(); })));
       inspector.append(field('Alt text', textInput(blk.alt, (v) => { blk.alt = v; upd(); })));
+      inspector.append(field('Link URL', textInput(blk.url, (v) => { blk.url = v; upd(); })));
       inspector.append(field('Width (% of row — or drag the blue handle)', numInput(Math.round(blk.width), (v) => { blk.width = Math.min(100, Math.max(8, v || 48)); upd(); }, 8, 100), 'blockwidth'));
       inspector.append(field('Corner radius (px)', numInput(blk.radius, (v) => { blk.radius = v; upd(); }, 0, 100)));
+    } else if (blk.type === 'button') {
+      inspector.append(field('Button text', textInput(blk.text, (v) => { blk.text = v; upd(); })));
+      inspector.append(field('Link URL', textInput(blk.url, (v) => { blk.url = v; upd(); })));
+      inspector.append(field('Width (% of row)', numInput(Math.round(blk.width), (v) => { blk.width = Math.min(100, Math.max(8, v || 48)); upd(); }, 8, 100), 'blockwidth'));
     } else {
       const ta = textInput(blk.text, (v) => { blk.text = v; upd(); }, true);
-      inspector.append(field('Text', ta, 'blocktext'));
+      inspector.append(field('Text (use [Text](/url) for links)', ta, 'blocktext'));
       inspector.append(field('Style', selInput(TAG_OPTIONS, blk.tag || 'p', (v) => { blk.tag = v; upd(); })));
       inspector.append(field('Font', fontInputs(blk, upd)));
       inspector.append(field('Size (px, 0 = default for style)', numInput(blk.size, (v) => { blk.size = v; upd(); }, 0, 200)));
