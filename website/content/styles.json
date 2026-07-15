@@ -5,6 +5,33 @@
     },
     "home.hero.ctaLabel": {
       "color": "#ffffff"
+    },
+    "site.footer.links.0.label": {
+      "color": "#ffffff"
+    },
+    "site.footer.links.0.href": {
+      "color": "#ffffff"
+    },
+    "site.footer.links.1.label": {
+      "color": "#ffffff"
+    },
+    "site.footer.links.1.href": {
+      "color": "#ffffff"
+    },
+    "site.footer.links.2.label": {
+      "color": "#ffffff"
+    },
+    "site.footer.links.2.href": {
+      "color": "#ffffff"
+    },
+    "site.footer.linkedinUrl": {
+      "color": "#ffffff"
+    },
+    "site.footer.copyrightName": {
+      "color": "#ffffff"
+    },
+    "site.footer.copyrightYear": {
+      "color": "#ffffff"
     }
   }
 }
