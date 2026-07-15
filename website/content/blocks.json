@@ -26,38 +26,6 @@
           "id": "default:footer",
           "type": "default_section",
           "key": "footer"
-        },
-        {
-          "id": "s_xtffewu",
-          "bg": "",
-          "paddingY": 64,
-          "gap": 24,
-          "maxWidth": 1152,
-          "minHeight": 0,
-          "align": "start",
-          "blocks": [
-            {
-              "id": "b_rt495mu",
-              "type": "text",
-              "tag": "p",
-              "text": "New tedfxt — click in the preview to ",
-              "font": "inter",
-              "fontCustom": "",
-              "size": 30,
-              "color": "#000000",
-              "bold": true,
-              "align": "left",
-              "width": 50
-            },
-            {
-              "id": "b_yoxyzrh",
-              "type": "image",
-              "src": "/assets/images/ChatGPT-Image-Jul-14--2026--04_31_47-PM.png",
-              "alt": "",
-              "width": 44,
-              "radius": 0
-            }
-          ]
         }
       ],
       "defaultOverrides": {},
